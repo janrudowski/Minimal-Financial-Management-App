@@ -1,0 +1,71 @@
+.signin-container {
+  display: flex;
+  height: 100%;
+}
+.signin-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  padding-top: 50px;
+}
+.signin-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 40px;
+}
+.signin-form {
+  width: 400px;
+}
+.signin-form label {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.signin-form input {
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid #f2f2f2;
+  padding: 10px;
+  outline: none;
+  line-height: 17px;
+  letter-spacing: 1px;
+}
+.signin-form input:focus {
+  border: 1px solid #96c56c !important;
+}
+.signin-form {
+  max-width: 500px;
+}
+.signin-btn {
+  border: 0;
+  border-radius: 10px;
+  background-color: #c8ee44;
+  height: 48px;
+  font-weight: 600;
+}
+.signin-google-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #78778b;
+  border: 0;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  height: 48px;
+  font-weight: 600;
+  gap: 10px;
+}
+
+.remember-me-container {
+  display: flex;
+  align-items: center;
+  font-weight: 300;
+}
+
+@media screen and (max-width: 960px) {
+  .signin-form {
+    margin: 0 auto;
+    width: 300px;
+  }
+}

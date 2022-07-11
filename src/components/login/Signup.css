@@ -1,0 +1,92 @@
+h1,
+p {
+  margin: 10px 0px;
+}
+.signup-container {
+  display: flex;
+}
+.logo {
+  width: 122px;
+  height: 30px;
+  margin-bottom: 150px;
+}
+.signup-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  padding-top: 50px;
+}
+.signup-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 40px;
+}
+.signup-form label {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.signup-form input {
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid #f2f2f2;
+  padding: 10px;
+  outline: none;
+  line-height: 17px;
+  letter-spacing: 1px;
+}
+.signup-form input:focus {
+  border: 1px solid #96c56c !important;
+}
+.signup-form {
+  width: 400px;
+}
+.signup-btn {
+  margin-top: 25px;
+  border: 0;
+  border-radius: 10px;
+  background-color: #c8ee44;
+  height: 48px;
+  font-weight: 600;
+}
+.signup-google-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #78778b;
+  border: 0;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  height: 48px;
+  font-weight: 600;
+  gap: 10px;
+}
+.google-logo {
+  width: 24px;
+  height: 24px;
+}
+.have-account {
+  position: relative;
+  color: #929eae;
+  font-size: 0.8rem;
+  text-align: center;
+}
+.have-account a {
+  text-decoration: none;
+  color: black;
+  font-weight: 700;
+}
+
+@media screen and (max-width: 960px) {
+  .signup-form {
+    margin: 0 auto;
+    width: 300px;
+  }
+  .logo {
+    margin-bottom: 40px;
+  }
+  .hand-image {
+    display: none;
+  }
+}
