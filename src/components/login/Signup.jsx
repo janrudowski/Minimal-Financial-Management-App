@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Signup.css';
 
 export default function Signup() {
   return (

@@ -1,9 +1,10 @@
-h1,
-p {
+.signup-container h1,
+.signup-container p {
   margin: 10px 0px;
 }
 .signup-container {
   display: flex;
+  width: 100%;
 }
 .logo {
   width: 122px;
