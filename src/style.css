@@ -23,6 +23,13 @@
   font-family: 'Kumbh Sans', sans-serif;
 }
 
+html,
+body,
+#root,
+.flex {
+  height: 100vh;
+}
+
 .flex {
   display: flex;
 }
