@@ -1,0 +1,14 @@
+.main-container {
+  display: flex;
+  width: 95%;
+  margin: 0 auto;
+  padding: 2em 0.5em;
+}
+
+.column-two {
+  width: 70%;
+}
+
+.column-one {
+  width: 30%;
+}

@@ -1,18 +1,42 @@
 /* global styles here */
-@import url('https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800;900&display=swap');
+@import url(https://fonts.googleapis.com/css?family=Kumbh+Sans:100,200,300,regular,500,600,700,800,900);
+:root {
+  --primary-green: #c8ee44;
+  --secondary-green: #29a073;
+  --dark: #363a3f;
+  --dark-two: #201e34;
+  --dark-three: #282541;
+  --dark-four: #1e1c30;
+  --light: #e5e5e5;
+  --gray: #f8f8f8;
+  --gray-one: #fafafa;
+  --text-one: #1b212d;
+  --text-two: #929eae;
+}
 
-* {
+*,
+::before,
+::after {
   box-sizing: border-box;
-}
-
-html,
-body,
-#root,
-.signup-container {
-  height: 100vh;
   margin: 0;
+  padding: 0;
+  font-family: 'Kumbh Sans', sans-serif;
 }
 
-body {
-  font-family: 'Kumbh Sans', sans-serif;
+.flex {
+  display: flex;
+}
+
+aside {
+  width: 20%;
+  background: var(--gray-one);
+  height: 100vh;
+}
+main {
+  width: 80%;
+  background: var(--ligth);
+}
+img {
+  max-width: 100%;
+  height: auto;
 }
