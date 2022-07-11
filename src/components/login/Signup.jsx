@@ -31,6 +31,7 @@ export default function Signup() {
               id='password'
               placeholder='Create your password'
             />
+
             <button className='signup-btn'>Create Account</button>
             <button className='signup-google-btn' type='button'>
               <img
