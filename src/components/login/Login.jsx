@@ -29,6 +29,10 @@ export default function Login() {
               id='password'
               placeholder='Input password'
             />
+            <div className='remember-me-container'>
+              <input type='checkbox' name='remember' id='remember' />
+              <label htmlFor='remember'>Remember for 30 days</label>
+            </div>
             <button className='signin-btn'>Sign in</button>
             <button className='signin-google-btn' type='button'>
               <img
@@ -39,7 +43,7 @@ export default function Login() {
               Sign in with google
             </button>
             <p className='have-account'>
-              Don't have an account? <Link to='/signup'>Sign up</Link>
+              Don't have an account? <Link to='/signup'>Sign up for free</Link>
             </p>
           </form>
         </div>

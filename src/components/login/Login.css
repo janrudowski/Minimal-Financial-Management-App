@@ -1,14 +1,6 @@
-h1,
-p {
-  margin: 10px 0px;
-}
 .signin-container {
   display: flex;
-}
-.logo {
-  width: 122px;
-  height: 30px;
-  margin-bottom: 90px;
+  height: 100%;
 }
 .signin-content {
   width: 100%;
@@ -22,6 +14,9 @@ p {
   flex-direction: column;
   gap: 10px;
   margin-top: 40px;
+}
+.signin-form {
+  width: 400px;
 }
 .signin-form label {
   font-size: 0.8rem;
@@ -43,7 +38,6 @@ p {
   max-width: 500px;
 }
 .signin-btn {
-  margin-top: 25px;
   border: 0;
   border-radius: 10px;
   background-color: #c8ee44;
@@ -62,28 +56,16 @@ p {
   font-weight: 600;
   gap: 10px;
 }
-.google-logo {
-  width: 24px;
-  height: 24px;
-}
-.have-account {
-  color: #929eae;
-  font-size: 0.8rem;
-  text-align: center;
-}
-.have-account span {
-  color: black;
-  font-weight: 600;
+
+.remember-me-container {
+  display: flex;
+  align-items: center;
+  font-weight: 300;
 }
 
 @media screen and (max-width: 960px) {
   .signin-form {
     margin: 0 auto;
-  }
-  .logo {
-    margin-bottom: 40px;
-  }
-  .hand-image {
-    display: none;
+    width: 300px;
   }
 }
