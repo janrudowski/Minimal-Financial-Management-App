@@ -14,11 +14,11 @@ export default function App() {
     <AuthContextProvider>
       <DarkModeContextProvider>
         <Routes>
-          <Route index to='/' element={<Dashboard />} />
-          <Route to='/transactions' element={<Transactions />} />
-          <Route to='/settings' element={<Settings />} />
-          <Route to='/login' element={<Login />} />
-          <Route to='/signup' element={<Signup />} />
+          <Route index path='/' element={<Dashboard />} />
+          <Route path='/transactions' element={<Transactions />} />
+          <Route path='/settings' element={<Settings />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<Signup />} />
         </Routes>
       </DarkModeContextProvider>
     </AuthContextProvider>
