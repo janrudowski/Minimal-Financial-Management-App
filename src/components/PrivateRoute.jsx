@@ -1,5 +1,11 @@
 import React from 'react';
-
-export default function PrivateRoute() {
-  return <div>PrivateRoute</div>;
+import Navbar from './Navbar/Navbar';
+export default function PrivateRoute({ children }) {
+  //todo: if user render else navigate to /login
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  );
 }
