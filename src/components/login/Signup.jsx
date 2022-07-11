@@ -1,10 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Signup() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 680384df760926dc9e2c16c7fd4ebe00a2fba4d4
   return (
     <div className='signup-container'>
       <div className='signup-content'>
@@ -56,10 +53,4 @@ export default function Signup() {
       />
     </div>
   );
-<<<<<<< HEAD
-=======
-  return <div>Signup herre</div>;
->>>>>>> 6422e78cdbd800c646e5207ccf01daaa95985b04
-=======
->>>>>>> 680384df760926dc9e2c16c7fd4ebe00a2fba4d4
 }
