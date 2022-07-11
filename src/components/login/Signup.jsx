@@ -16,11 +16,21 @@ export default function Signup() {
           <p>Welcome back! Please enter your details</p>
           <form>
             <label htmlFor='name'>Full Name</label>
-            <input type='text' name='name' id='name' />
+            <input type='text' name='name' id='name' placeholder='Irumi Desu' />
             <label htmlFor='email'>Email</label>
-            <input type='email' name='email' id='email' />
+            <input
+              type='email'
+              name='email'
+              id='email'
+              placeholder='irumi@desu.com'
+            />
             <label htmlFor='password'>Password</label>
-            <input type='password' name='password' id='password' />
+            <input
+              type='password'
+              name='password'
+              id='password'
+              placeholder='Create your password'
+            />
             <button className='signup-btn'>Create Account</button>
             <button className='signup-google-btn' type='button'>
               <img
@@ -31,13 +41,13 @@ export default function Signup() {
               Sign up with google
             </button>
             <p className='have-account'>
-              Already have an account? <Link to='/signin'>Sign in</Link>
+              Already have an account? <Link to='/login'>Sign in</Link>
             </p>
           </form>
         </div>
       </div>
       <img
-        className='signup-image'
+        className='hand-image'
         src={`${process.env.PUBLIC_URL}/images/Image.png`}
         alt='hand holding clock'
       />
