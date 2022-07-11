@@ -10,6 +10,7 @@
   --light: #e5e5e5;
   --gray: #f8f8f8;
   --gray-one: #fafafa;
+  --gray-two: #f8f8f8;
   --text-one: #1b212d;
   --text-two: #929eae;
 }
@@ -46,4 +47,40 @@ main {
 img {
   max-width: 100%;
   height: auto;
+}
+
+.dashboard-profile {
+  display: flex;
+  align-items: center;
+  background: var(--gray-one);
+  border-radius: 100px;
+  padding: 0.5em 0;
+  width: 60%;
+  max-width: 300px;
+  margin-bottom: 1em;
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+.profile-picture-container {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 0 1em;
+}
+
+.profile-picture-container img {
+  object-fit: cover;
+}
+
+.dashboard-profile-name {
+  font-weight: 600;
+  margin-right: auto;
+}
+
+.dashboard-profile-chevron {
+  margin-right: 1em;
+  width: 0.8rem;
+  transform: rotate(90deg);
 }
