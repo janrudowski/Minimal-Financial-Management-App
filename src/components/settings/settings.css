@@ -12,6 +12,13 @@
 /* only applies to the first child (h3) of the class*/
 .account-information-container > h3 {
   font-size: 1.3rem;
+  margin-bottom: 0.5em;
+}
+.account-information-container h3 {
+  color: var(--text-one);
+}
+.account-information-container p {
+  color: var(--text-two);
 }
 .personal-information-container {
   display: flex;
@@ -20,19 +27,23 @@
   margin: 40px 0;
 }
 .account-information-container form {
+  color: var(--text-two);
 }
 .account-information-container label {
   font-size: 0.88rem;
   font-weight: 700;
+  margin-bottom: 0.5em;
 }
 .account-information-container input {
   height: 48px;
   border-radius: 10px;
-  border: 1px solid #e0dede;
+  border: 1px solid #f5f5f5;
   padding: 10px;
   outline: none;
   line-height: 17px;
   letter-spacing: 1px;
+  background: transparent;
+  color: var(--text-one);
 }
 .form-row {
   display: flex;

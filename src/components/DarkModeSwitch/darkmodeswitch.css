@@ -1,0 +1,35 @@
+.darkmode-container {
+  margin-left: 1em;
+  display: flex;
+  align-items: center;
+  color: var(--text-two);
+  cursor: pointer;
+  margin-top: 1em;
+}
+
+.darkmode-switch-container {
+  display: flex;
+  align-items: center;
+  background: var(--text-two);
+  border-radius: 10px;
+  width: 2.5em;
+  height: 1.5em;
+  margin-right: 0.5em;
+  box-shadow: rgba(50, 50, 93, 0.1) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.1) 0px 18px 36px -18px inset;
+}
+
+.darkmode-switch {
+  background: red;
+  width: 1em;
+  height: 1em;
+  border-radius: 10px;
+  margin: 0 0.2em;
+  background: var(--background-two);
+  transform: translateX(0%);
+  transition: transform 300ms ease-in-out;
+}
+
+.darkmode-switch-active {
+  transform: translateX(120%);
+}

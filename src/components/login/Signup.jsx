@@ -51,11 +51,9 @@ export default function Signup() {
     <div className='signup-container'>
       <div className='signup-content'>
         <div className='signup-form'>
-          <img
-            src={`${process.env.PUBLIC_URL}/images/logo.png`}
-            alt='maglo logo'
-            className='logo'
-          />
+          <svg className='logo'>
+            <use href='/images/Logo.svg#Layer_1'></use>
+          </svg>
           <h1>Create new account</h1>
           <p>Welcome back! Please enter your details</p>
           <form onSubmit={handleSubmit}>
