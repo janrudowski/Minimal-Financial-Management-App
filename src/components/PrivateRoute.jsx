@@ -3,8 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
 export default function PrivateRoute({ children, loginPage = false }) {
-  // const { currentUser } = useAuth();
-  const currentUser = '';
+  const { currentUser } = useAuth();
 
   if (loginPage) return currentUser ? <Navigate to='/' /> : children;
   else
