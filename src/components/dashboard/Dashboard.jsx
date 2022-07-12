@@ -66,10 +66,12 @@ export default function Dashboard() {
             </div>
             <table className='expenses-table'>
               <thead>
-                <th>Name/Business</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Date</th>
+                <tr>
+                  <th>Name/Business</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                </tr>
               </thead>
               <tbody>
                 <tr>
