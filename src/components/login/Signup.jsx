@@ -26,17 +26,24 @@ export default function Signup() {
   async function handleSubmit(e) {
     e.preventDefault();
     const { email, password } = formData;
-
-    const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(
-      formData.email
-    );
-    const isValidPassword = formData.password.length >= 8;
-    if (isValidEmail && isValidPassword) {
+    try {
       await signup(email, password);
-      setErrMsg('');
       navigation('/');
-    } else {
-      setErrMsg('Password length at least must be 8 characters');
+    } catch (error) {
+      setErrMsg(() => {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            return 'Email is already in use. Please use another email';
+
+          default:
+            return errMsg;
+        }
+      });
+      setFormData({
+        fullName: '',
+        email: '',
+        password: '',
+      });
     }
   }
 
@@ -60,6 +67,7 @@ export default function Signup() {
               placeholder='Irumi Desu'
               onChange={handleChange}
               value={formData.fullName}
+              required={true}
             />
             <label htmlFor='email'>Email</label>
             <input
@@ -69,6 +77,7 @@ export default function Signup() {
               placeholder='irumi@desu.com'
               onChange={handleChange}
               value={formData.email}
+              required={true}
             />
             <label htmlFor='password'>Password</label>
             <input
@@ -78,6 +87,8 @@ export default function Signup() {
               placeholder='Create your password'
               onChange={handleChange}
               value={formData.password}
+              required={true}
+              minLength={8}
             />
             {errMsg.length > 0 && <p className='invalid'>{errMsg}</p>}
 
