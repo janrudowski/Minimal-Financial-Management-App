@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './login.css';
 
 export default function Login() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    isRemember: false,
+  });
+
+  function handleChange(e) {
+    const { name, value, type, checked } = e.target;
+    setFormData((oldData) => {
+      return {
+        ...oldData,
+        [name]: type === 'checkbox' ? checked : value,
+      };
+    });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(formData);
+  }
+
   return (
     <div className='signin-container'>
       <div className='signin-content'>
@@ -14,13 +35,15 @@ export default function Login() {
           />
           <h1>Welcome back</h1>
           <p>Welcome back! Please enter your details</p>
-          <form>
+          <form onSubmit={handleSubmit}>
             <label htmlFor='email'>Email</label>
             <input
               type='email'
               name='email'
               id='email'
               placeholder='example@email.com'
+              onChange={handleChange}
+              value={formData.email}
             />
             <label htmlFor='password'>Password</label>
             <input
@@ -28,9 +51,17 @@ export default function Login() {
               name='password'
               id='password'
               placeholder='Input password'
+              onChange={handleChange}
+              value={formData.password}
             />
             <div className='remember-me-container'>
-              <input type='checkbox' name='remember' id='remember' />
+              <input
+                type='checkbox'
+                name='isRemember'
+                id='isRemember'
+                onChange={handleChange}
+                checked={formData.isRemember}
+              />
               <label htmlFor='remember'>Remember for 30 days</label>
             </div>
             <button className='signin-btn'>Sign in</button>

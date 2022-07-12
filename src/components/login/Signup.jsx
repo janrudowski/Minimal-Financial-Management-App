@@ -1,8 +1,30 @@
-import React from 'react';
+import { hasFormSubmit } from '@testing-library/user-event/dist/utils';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './signup.css';
 
 export default function Signup() {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+  });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData((oldData) => {
+      return {
+        ...oldData,
+        [name]: value,
+      };
+    });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(formData);
+  }
+
   return (
     <div className='signup-container'>
       <div className='signup-content'>
@@ -14,15 +36,24 @@ export default function Signup() {
           />
           <h1>Create new account</h1>
           <p>Welcome back! Please enter your details</p>
-          <form>
-            <label htmlFor='name'>Full Name</label>
-            <input type='text' name='name' id='name' placeholder='Irumi Desu' />
+          <form onSubmit={handleSubmit}>
+            <label htmlFor='fullName'>Full Name</label>
+            <input
+              type='text'
+              name='fullName'
+              id='fullName'
+              placeholder='Irumi Desu'
+              onChange={handleChange}
+              value={formData.fullName}
+            />
             <label htmlFor='email'>Email</label>
             <input
               type='email'
               name='email'
               id='email'
               placeholder='irumi@desu.com'
+              onChange={handleChange}
+              value={formData.email}
             />
             <label htmlFor='password'>Password</label>
             <input
@@ -30,6 +61,8 @@ export default function Signup() {
               name='password'
               id='password'
               placeholder='Create your password'
+              onChange={handleChange}
+              value={formData.password}
             />
 
             <button className='signup-btn'>Create Account</button>
