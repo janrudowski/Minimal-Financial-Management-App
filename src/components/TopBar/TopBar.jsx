@@ -1,9 +1,9 @@
 import './topbar.css';
 
-export default function TopBar() {
+export default function TopBar({ title }) {
   return (
     <div className='top-bar'>
-      <h2 className='title'>Dashboard</h2>
+      <h2 className='title'>{title}</h2>
       <div className='profile'>
         <img
           className='avatar-image'
