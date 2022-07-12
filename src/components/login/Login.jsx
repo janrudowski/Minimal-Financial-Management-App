@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import './login.css';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
 export default function Login() {
   const { login } = useAuth();
   const navigation = useNavigate();
@@ -29,10 +28,22 @@ export default function Login() {
     const { email, password } = formData;
     try {
       await login(email, password);
-      setErrMsg('');
       navigation('/');
     } catch (error) {
-      setErrMsg('Invalid email/password');
+      setErrMsg(() => {
+        switch (error.code) {
+          case 'auth/user-not-found':
+            return 'User not found. Please check your email and password';
+
+          default:
+            return errMsg;
+        }
+      });
+      setFormData({
+        email: '',
+        password: '',
+        isRemember: false,
+      });
     }
   }
 
@@ -56,6 +67,7 @@ export default function Login() {
               placeholder='example@email.com'
               onChange={handleChange}
               value={formData.email}
+              required={true}
             />
             <label htmlFor='password'>Password</label>
             <input
@@ -65,6 +77,8 @@ export default function Login() {
               placeholder='Input password'
               onChange={handleChange}
               value={formData.password}
+              required={true}
+              minLength={8}
             />
             <div className='remember-me-container'>
               <input

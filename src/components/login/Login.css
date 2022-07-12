@@ -64,7 +64,8 @@
   font-weight: 300;
 }
 .invalid {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: coral;
 }
 
