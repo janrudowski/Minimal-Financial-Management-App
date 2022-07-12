@@ -40,8 +40,22 @@ export default function App() {
                 </PrivateRoute>
               }
             />
-            <Route path='/login' element={<Login />} />
-            <Route path='/signup' element={<Signup />} />
+            <Route
+              path='/login'
+              element={
+                <PrivateRoute loginPage={true}>
+                  <Login />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path='/signup'
+              element={
+                <PrivateRoute loginPage={true}>
+                  <Signup />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </DarkModeContextProvider>
       </AuthContextProvider>
