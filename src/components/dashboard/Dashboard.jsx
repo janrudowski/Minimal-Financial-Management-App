@@ -1,12 +1,13 @@
 import React from 'react';
+import TopBar from '../TopBar/TopBar';
 import './dashboard.css';
 
 export default function Dashboard() {
   return (
     <main>
-      <div className='main-container'>
+      <div className='dashboard-container'>
+        <TopBar title='Dashboard' />
         <div className='column column-two'>
-          <h2 className='dashboard-title'>Dashboard</h2>
           <div className='dashboard-spending-cards'>
             <div className='dashboard-spending-card dashboard-spending-card-first'>
               <div className='dashboard-spending-card-secondary dashboard-spending-card-secondary-first'>
@@ -126,18 +127,7 @@ export default function Dashboard() {
             </table>
           </div>
         </div>
-        <div className='column-one'>
-          <div className='dashboard-profile'>
-            <div className='profile-picture-container'>
-              <img src='/images/profile-picture.jpg' alt='profile picture' />
-            </div>
-            <p className='dashboard-profile-name'>Mahfuzul Nabil</p>
-            <img
-              className='dashboard-profile-chevron'
-              src='/icons/chevron-icon.svg'
-              alt='chevron down'
-            />
-          </div>
+        <div className='column column-one'>
           <div className='recurring-expenses-container'>
             <div className='expenses-header'>
               <h3 className='expenses-title'>Recurring Expenses</h3>

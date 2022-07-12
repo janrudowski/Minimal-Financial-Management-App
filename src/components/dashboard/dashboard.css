@@ -1,11 +1,13 @@
-.main-container {
+.dashboard-container {
+  flex-wrap: wrap;
   display: flex;
   justify-content: space-between;
   width: 95%;
-  margin: 0 auto;
-  padding: 2em 0.5em;
+  margin: 2em auto 0;
 }
-
+.column {
+  margin-top: 2em;
+}
 .column-two {
   width: 60%;
 }
