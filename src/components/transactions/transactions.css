@@ -1,0 +1,111 @@
+.transactions-container {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  margin: 2em auto 0;
+}
+
+.transactions-search-row {
+  display: flex;
+  margin-top: 2em;
+  width: 100%;
+}
+
+.transactions-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5em;
+}
+
+.transactions-search-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 1em;
+}
+.transactions-search-container {
+  display: flex;
+  align-items: center;
+  background: #f5f5f5;
+  padding: 0.5em 1em;
+  border-radius: 15px;
+  margin-right: auto;
+  width: 30%;
+}
+
+.transactions-search-container input {
+  outline: none;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.transactions-create-expense-button {
+  border: none;
+  background: var(--primary-green);
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0.5em 1em;
+  margin-right: 1em;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.transactions-filters-button {
+  font-size: 0.9rem;
+  border: 1px solid #f5f5f5;
+  border-radius: 10px;
+  background: none;
+  display: flex;
+  align-items: center;
+  padding: 0.5em;
+  margin-right: 2em;
+  font-weight: 500;
+}
+
+.transactions-expenses-table-container {
+  margin-top: 2em;
+  padding: 2em 0;
+  border-top: 1px solid #f5f5f5;
+}
+.transactions-expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transactions-expenses-table tbody tr {
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.transactions-expenses-table tbody tr:last-of-type {
+  border-bottom: none;
+}
+
+.transactions-expenses-table th {
+  color: var(--text-two);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.transactions-expenses-table th:first-of-type {
+  text-align: left;
+}
+
+.transactions-expenses-table td {
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-two);
+  margin: 0.5em 0;
+}
+
+.expenses-table-edit-button {
+  border: none;
+  background: var(--primary-green);
+  padding: 0.6em 1.5em;
+  font-weight: 600;
+  font-size: 0.8rem;
+  border-radius: 5px;
+}
