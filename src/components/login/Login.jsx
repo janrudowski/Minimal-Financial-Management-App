@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './login.css';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+
 export default function Login() {
   const { login } = useAuth();
   const navigation = useNavigate();
@@ -11,6 +12,7 @@ export default function Login() {
     password: '',
     isRemember: false,
   });
+  const [errMsg, setErrMsg] = useState('');
 
   function handleChange(e) {
     const { name, value, type, checked } = e.target;
@@ -25,8 +27,13 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
     const { email, password } = formData;
-    await login(email, password);
-    navigation('/');
+    try {
+      await login(email, password);
+      setErrMsg('');
+      navigation('/');
+    } catch (error) {
+      setErrMsg('Invalid email/password');
+    }
   }
 
   return (
@@ -69,6 +76,7 @@ export default function Login() {
               />
               <label htmlFor='remember'>Remember for 30 days</label>
             </div>
+            {errMsg.length > 0 && <p className='invalid'>{errMsg}</p>}
             <button className='signin-btn'>Sign in</button>
             <button className='signin-google-btn' type='button'>
               <img

@@ -63,6 +63,10 @@
   align-items: center;
   font-weight: 300;
 }
+.invalid {
+  font-size: 0.8rem;
+  color: coral;
+}
 
 @media screen and (max-width: 960px) {
   .signin-form {

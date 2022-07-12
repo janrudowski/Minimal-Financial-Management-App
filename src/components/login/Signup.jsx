@@ -11,6 +11,7 @@ export default function Signup() {
     email: '',
     password: '',
   });
+  const [errMsg, setErrMsg] = useState('');
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -25,8 +26,18 @@ export default function Signup() {
   async function handleSubmit(e) {
     e.preventDefault();
     const { email, password } = formData;
-    await signup(email, password);
-    navigation('/');
+
+    const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(
+      formData.email
+    );
+    const isValidPassword = formData.password.length >= 8;
+    if (isValidEmail && isValidPassword) {
+      await signup(email, password);
+      setErrMsg('');
+      navigation('/');
+    } else {
+      setErrMsg('Password length at least must be 8 characters');
+    }
   }
 
   return (
@@ -68,6 +79,7 @@ export default function Signup() {
               onChange={handleChange}
               value={formData.password}
             />
+            {errMsg.length > 0 && <p className='invalid'>{errMsg}</p>}
 
             <button className='signup-btn'>Create Account</button>
             <button className='signup-google-btn' type='button'>
