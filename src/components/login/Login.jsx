@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './login.css';
-
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 export default function Login() {
+  const { login } = useAuth();
+  const navigation = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,9 +22,11 @@ export default function Login() {
     });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log(formData);
+    const { email, password } = formData;
+    await login(email, password);
+    navigation('/');
   }
 
   return (

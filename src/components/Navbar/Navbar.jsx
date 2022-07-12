@@ -1,8 +1,12 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import './navbar.css';
+import { useAuth } from '../../contexts/AuthContext';
 export default function Navbar() {
-  function handleLogout() {}
+  const { logout } = useAuth();
+  function handleLogout() {
+    logout();
+  }
   return (
     <aside>
       <div className='sidebar-container'>

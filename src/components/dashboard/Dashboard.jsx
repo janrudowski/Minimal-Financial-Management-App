@@ -1,7 +1,6 @@
 import React from 'react';
 import TopBar from '../TopBar/TopBar';
 import './dashboard.css';
-
 export default function Dashboard() {
   return (
     <main>

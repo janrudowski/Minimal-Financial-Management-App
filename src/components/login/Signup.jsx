@@ -1,9 +1,11 @@
-import { hasFormSubmit } from '@testing-library/user-event/dist/utils';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './signup.css';
-
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 export default function Signup() {
+  const { signup } = useAuth();
+  const navigation = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -20,9 +22,11 @@ export default function Signup() {
     });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log(formData);
+    const { email, password } = formData;
+    await signup(email, password);
+    navigation('/');
   }
 
   return (

@@ -57,4 +57,5 @@ nav a.active .sidebar-link-icon {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-two);
+  cursor: pointer;
 }
