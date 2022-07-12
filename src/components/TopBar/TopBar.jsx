@@ -11,11 +11,9 @@ export default function TopBar({ title }) {
           alt='user avatar'
         />
         <span className='avatar-name'>Michael Jackson</span>
-        <img
-          className='dashboard-profile-chevron'
-          src='/icons/chevron-icon.svg'
-          alt='chevron down'
-        />
+        <svg className='topbar-profile-chevron'>
+          <use href='/icons/chevron-icon.svg#Layer_1'></use>
+        </svg>
       </div>
     </div>
   );

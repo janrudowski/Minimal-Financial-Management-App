@@ -33,7 +33,7 @@
   align-items: center;
   width: 30%;
   padding: 1.5em 0.5em;
-  background: var(--gray-two);
+  background: var(--background-three);
   border-radius: 10px;
 }
 .dashboard-spending-card-main-title {
@@ -43,12 +43,13 @@
 }
 .dashboard-spending-card-main-price {
   font-size: 1.2rem;
+  color: var(--text-one);
 }
 .dashboard-spending-card-secondary {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e8e8e8;
+  background: var(--background-four);
   margin-right: 1em;
   border-radius: 50%;
   padding: 0.75em;
@@ -57,6 +58,7 @@
 .dashboard-icon {
   width: 1rem;
   height: 1rem;
+  fill: var(--text-one);
 }
 
 .chart-container {
@@ -100,6 +102,7 @@
   margin-right: auto;
   font-weight: 600;
   font-size: 1.2rem;
+  color: var(--text-one);
 }
 
 .expenses-view-all {

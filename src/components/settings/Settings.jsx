@@ -36,7 +36,7 @@ export default function Settings() {
                 <input type='date' name='birthday' id='birthday' />
               </div>
               <div className='input-container'>
-                <label htmlFor='phone'>First Name</label>
+                <label htmlFor='phone'>Mobile Number</label>
                 <input type='tel' name='phone' id='phone' />
               </div>
             </div>

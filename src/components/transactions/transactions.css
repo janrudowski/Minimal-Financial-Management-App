@@ -15,17 +15,19 @@
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5em;
+  fill: var(--text-one);
 }
 
 .transactions-search-icon {
   width: 1.2rem;
   height: 1.2rem;
   margin-right: 1em;
+  fill: var(--text-one);
 }
 .transactions-search-container {
   display: flex;
   align-items: center;
-  background: #f5f5f5;
+  background: var(--background-five);
   padding: 0.5em 1em;
   border-radius: 15px;
   margin-right: auto;
@@ -38,6 +40,7 @@
   border: none;
   font-size: 0.9rem;
   width: 100%;
+  color: var(--text-one);
 }
 
 .transactions-create-expense-button {
@@ -50,8 +53,11 @@
   margin-right: 1em;
   font-weight: 600;
   font-size: 0.9rem;
+  color: #1b212d;
 }
-
+.transactions-create-expense-button .transactions-icon {
+  fill: #1b212d;
+}
 .transactions-filters-button {
   font-size: 0.9rem;
   border: 1px solid #f5f5f5;
@@ -62,6 +68,7 @@
   padding: 0.5em;
   margin-right: 2em;
   font-weight: 500;
+  color: var(--text-one);
 }
 
 .transactions-expenses-table-container {

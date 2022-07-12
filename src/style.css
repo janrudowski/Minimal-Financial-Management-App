@@ -3,6 +3,11 @@
 :root {
   --primary-green: #c8ee44;
   --secondary-green: #29a073;
+  --background-one: #fff;
+  --background-two: #fafafa;
+  --background-three: #fafafa;
+  --background-four: #e8e8e8;
+  --background-five: #f8f8f8;
   --dark: #363a3f;
   --dark-two: #201e34;
   --dark-three: #282541;
@@ -33,16 +38,17 @@ body,
 
 .flex {
   display: flex;
+  transition: color 300ms ease-in-out, background 300ms ease-in-out;
 }
 
 aside {
   width: 20%;
-  background: var(--gray-one);
+  background: var(--background-two);
   height: 100vh;
 }
 main {
   width: 80%;
-  background: var(--ligth);
+  background: var(--background-two);
 }
 img {
   max-width: 100%;
@@ -83,4 +89,18 @@ img {
   margin-right: 1em;
   width: 0.8rem;
   transform: rotate(90deg);
+}
+.logo {
+  max-width: 100%;
+  max-height: 30px;
+  fill: var(--text-one);
+}
+.flex-dark {
+  --text-one: #fff;
+  --background-one: #1c1a2e;
+  --background-two: #1e1c30;
+  --background-three: #201e34;
+  --background-four: #292642;
+  --dark: #282541;
+  --background-five: #282541;
 }

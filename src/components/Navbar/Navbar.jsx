@@ -2,16 +2,21 @@ import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import './navbar.css';
 import { useAuth } from '../../contexts/AuthContext';
+import Darkmodeswitch from '../DarkModeSwitch/DarkModeSwitch';
 export default function Navbar() {
   const { logout } = useAuth();
+
   function handleLogout() {
     logout();
   }
+
   return (
     <aside>
       <div className='sidebar-container'>
         <div className='sidebar-logo'>
-          <img src='/images/logo.png' alt='logo' />
+          <svg className='logo'>
+            <use href='/images/Logo.svg#Layer_1'></use>
+          </svg>
         </div>
         <nav>
           <NavLink className='sidebar-link' to='/'>
@@ -32,6 +37,7 @@ export default function Navbar() {
             </svg>
             Settings
           </NavLink>
+          <Darkmodeswitch />
         </nav>
         <div className='sidebar-logout'>
           <button onClick={handleLogout}>

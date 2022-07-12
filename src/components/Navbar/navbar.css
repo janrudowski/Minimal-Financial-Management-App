@@ -38,12 +38,12 @@ nav a {
 }
 
 nav a.active {
-  color: var(--text-one);
+  color: #1b212d;
   background: var(--primary-green);
 }
 
 nav a.active .sidebar-link-icon {
-  fill: var(--text-one);
+  fill: #1b212d;
 }
 
 .sidebar-logout {

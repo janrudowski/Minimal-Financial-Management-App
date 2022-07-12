@@ -11,7 +11,8 @@
   gap: 10px;
   border-radius: 100px;
   padding: 0.4em;
-  background-color: var(--gray-two);
+  background-color: var(--background-three);
+  color: var(--text-one);
 }
 .avatar-image {
   width: 36px;
@@ -20,6 +21,16 @@
 .avatar-name {
   font-weight: 600;
   font-size: 0.88rem;
-  line-height: 17px;
   margin-right: 1em;
+}
+
+.topbar-profile-chevron {
+  width: 0.85rem;
+  height: 0.85rem;
+  transform: rotate(90deg);
+  fill: var(--text-one);
+}
+
+.title {
+  color: var(--text-one);
 }
