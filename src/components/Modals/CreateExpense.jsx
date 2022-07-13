@@ -32,7 +32,7 @@ export default function CreateExpense({ isVisible, toggle }) {
     let isCorrect = true;
     Object.entries(formData).forEach(([key, value]) => {
       let message;
-      if (value === '') message = `${key} cannot be empty.`;
+      if (value === '') message = `${key} cannot be empty.`; //TODO: FIX DATE GOES THROUGH EVEN THO ITS EMPTY
       if (key === 'amount' && isNaN(value))
         message = `${key} must be a number.`;
       setError((prev) => {
