@@ -5,11 +5,13 @@ export default function Spinner({
   fill = 'var(--text-two)',
   height = '3rem',
   width = '3rem',
+  marginTop = 0,
 }) {
   const style = {
     fill: fill,
     width: width,
     height: height,
+    marginTop: marginTop,
   };
   return (
     <div className='spinner-container'>

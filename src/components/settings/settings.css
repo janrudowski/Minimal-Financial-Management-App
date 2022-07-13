@@ -37,7 +37,7 @@
 .account-information-container input {
   height: 48px;
   border-radius: 10px;
-  border: 1px solid #f5f5f5;
+  border: 1px solid var(--border-one);
   padding: 10px;
   outline: none;
   line-height: 17px;

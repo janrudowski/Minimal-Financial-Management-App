@@ -1,8 +1,32 @@
 import React from 'react';
+import { useAPI } from '../../contexts/APIContext';
 import Spinner from '../Spinner/Spinner';
 import TopBar from '../TopBar/TopBar';
+import { formatDate } from '../../utils/formatDate';
 import './transactions.css';
+
 export default function Transactions() {
+  const { expenses, loading } = useAPI();
+  const expensesRows = expenses.map((el) => {
+    return (
+      <tr key={el.id}>
+        <td className='expenses-table-name-column'>
+          <img src='/images/apple.png' alt='business' />
+          <div className='expenses-table-name-column-title-container'>
+            <p className='expenses-table-name-column-title'>{el.name}</p>
+            <p className='expenses-table-name-column-subtitle'>{el.business}</p>
+          </div>
+        </td>
+        <td>{el.type}</td>
+        <td className='expenses-table-amount-column'>${el.amount}</td>
+        <td>{formatDate(el.date.seconds)}</td>
+        <td>{el.invoiceid}</td>
+        <td>
+          <button className='expenses-table-edit-button'>Edit</button>
+        </td>
+      </tr>
+    );
+  });
   return (
     <main>
       <div className='transactions-container'>
@@ -28,7 +52,7 @@ export default function Transactions() {
           </button>
         </div>
         <div className='transactions-expenses-table-container'>
-          {/* <table className='transactions-expenses-table'>
+          <table className='transactions-expenses-table'>
             <thead>
               <tr>
                 <th>Name/Business</th>
@@ -39,230 +63,9 @@ export default function Transactions() {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/apple.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Iphone 13 Pro MAX
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Apple. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Mobile</td>
-                <td className='expenses-table-amount-column'>$420.84</td>
-                <td>14 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/netflix.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Netflix Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Netflix
-                    </p>
-                  </div>
-                </td>
-                <td>Entertainment</td>
-                <td className='expenses-table-amount-column'>$100.00</td>
-                <td>05 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-              <tr>
-                <td className='expenses-table-name-column'>
-                  <img src='/images/figma.png' alt='business' />
-                  <div className='expenses-table-name-column-title-container'>
-                    <p className='expenses-table-name-column-title'>
-                      Figma Subscription
-                    </p>
-                    <p className='expenses-table-name-column-subtitle'>
-                      Figma. Inc
-                    </p>
-                  </div>
-                </td>
-                <td>Software</td>
-                <td className='expenses-table-amount-column'>$244.20</td>
-                <td>02 Apr 2022</td>
-                <td>MGL0124877</td>
-                <td>
-                  <button className='expenses-table-edit-button'>Edit</button>
-                </td>
-              </tr>
-            </tbody>
-          </table> */}
-          <Spinner />
+            <tbody>{!loading && expensesRows}</tbody>
+          </table>
+          {loading && <Spinner marginTop='2em' />}
         </div>
       </div>
     </main>
