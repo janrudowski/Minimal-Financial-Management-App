@@ -1,7 +1,29 @@
 import React from 'react';
 import TopBar from '../TopBar/TopBar';
+import { useAPI } from '../../contexts/APIContext';
+import { formatDate } from '../../utils/formatDate';
+import Spinner from '../Spinner/Spinner';
 import './dashboard.css';
+import { Link } from 'react-router-dom';
+
 export default function Dashboard() {
+  const { recentExpenses, totalSpending, loading } = useAPI();
+  const recentExpensesRows = recentExpenses.map((el) => {
+    return (
+      <tr key={el.id}>
+        <td className='expenses-table-name-column'>
+          <img src='/images/apple.png' alt='business' />
+          <div className='expenses-table-name-column-title-container'>
+            <p className='expenses-table-name-column-title'>{el.name}</p>
+            <p className='expenses-table-name-column-subtitle'>{el.business}</p>
+          </div>
+        </td>
+        <td>{el.type}</td>
+        <td className='expenses-table-amount-column'>${el.amount}</td>
+        <td>{formatDate(el.date.seconds)}</td>
+      </tr>
+    );
+  });
   return (
     <main>
       <div className='dashboard-container'>
@@ -19,7 +41,11 @@ export default function Dashboard() {
                   Total spending
                 </p>
                 <h4 className='dashboard-spending-card-main-price dashboard-spending-card-main-price-first'>
-                  $5240.21
+                  {loading ? (
+                    <Spinner width='1.2rem' height='1.2rem' />
+                  ) : (
+                    `$${totalSpending}`
+                  )}
                 </h4>
               </div>
             </div>
@@ -57,12 +83,12 @@ export default function Dashboard() {
           <div className='recent-expenses-container'>
             <div className='expenses-header'>
               <h3 className='expenses-title'>Recent Expenses</h3>
-              <a href='#' className='expenses-view-all'>
+              <Link to='/transactions' className='expenses-view-all'>
                 View All{' '}
                 <svg className='expenses-view-all-icon'>
                   <use href='/icons/chevron-icon.svg#Layer_1'></use>
                 </svg>
-              </a>
+              </Link>
             </div>
             <table className='expenses-table'>
               <thead>
@@ -73,69 +99,21 @@ export default function Dashboard() {
                   <th>Date</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td className='expenses-table-name-column'>
-                    <img src='/images/apple.png' alt='business' />
-                    <div className='expenses-table-name-column-title-container'>
-                      <p className='expenses-table-name-column-title'>
-                        Iphone 13 Pro MAX
-                      </p>
-                      <p className='expenses-table-name-column-subtitle'>
-                        Apple. Inc
-                      </p>
-                    </div>
-                  </td>
-                  <td>Mobile</td>
-                  <td className='expenses-table-amount-column'>$420.84</td>
-                  <td>14 Apr 2022</td>
-                </tr>
-                <tr>
-                  <td className='expenses-table-name-column'>
-                    <img src='/images/netflix.png' alt='business' />
-                    <div className='expenses-table-name-column-title-container'>
-                      <p className='expenses-table-name-column-title'>
-                        Netflix Subscription
-                      </p>
-                      <p className='expenses-table-name-column-subtitle'>
-                        Netflix
-                      </p>
-                    </div>
-                  </td>
-                  <td>Entertainment</td>
-                  <td className='expenses-table-amount-column'>$100.00</td>
-                  <td>05 Apr 2022</td>
-                </tr>
-                <tr>
-                  <td className='expenses-table-name-column'>
-                    <img src='/images/figma.png' alt='business' />
-                    <div className='expenses-table-name-column-title-container'>
-                      <p className='expenses-table-name-column-title'>
-                        Figma Subscription
-                      </p>
-                      <p className='expenses-table-name-column-subtitle'>
-                        Figma. Inc
-                      </p>
-                    </div>
-                  </td>
-                  <td>Software</td>
-                  <td className='expenses-table-amount-column'>$244.20</td>
-                  <td>02 Apr 2022</td>
-                </tr>
-              </tbody>
+              <tbody>{!loading && recentExpensesRows}</tbody>
             </table>
+            {loading && <Spinner marginTop='2em' />}
           </div>
         </div>
         <div className='column column-one'>
           <div className='recurring-expenses-container'>
             <div className='expenses-header'>
               <h3 className='expenses-title'>Recurring Expenses</h3>
-              <a href='#' className='expenses-view-all'>
+              <Link to='/transactions' className='expenses-view-all'>
                 View All{' '}
                 <svg className='expenses-view-all-icon'>
                   <use href='/icons/chevron-icon.svg#Layer_1'></use>
                 </svg>
-              </a>
+              </Link>
             </div>
             <div className='reccuring-expense'>
               <img src='/images/netflix.png' alt='business' />
