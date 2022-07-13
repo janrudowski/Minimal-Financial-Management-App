@@ -1,4 +1,5 @@
 import React from 'react';
+import Spinner from '../Spinner/Spinner';
 import TopBar from '../TopBar/TopBar';
 import './transactions.css';
 export default function Transactions() {
@@ -27,7 +28,7 @@ export default function Transactions() {
           </button>
         </div>
         <div className='transactions-expenses-table-container'>
-          <table className='transactions-expenses-table'>
+          {/* <table className='transactions-expenses-table'>
             <thead>
               <tr>
                 <th>Name/Business</th>
@@ -260,7 +261,8 @@ export default function Transactions() {
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> */}
+          <Spinner />
         </div>
       </div>
     </main>
