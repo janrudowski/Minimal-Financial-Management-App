@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAPI } from '../../contexts/APIContext';
 import Spinner from '../Spinner/Spinner';
 import TopBar from '../TopBar/TopBar';
 import { formatDate } from '../../utils/formatDate';
+import CreateExpense from '../Modals/CreateExpense';
 import './transactions.css';
 
 export default function Transactions() {
   const { expenses, loading } = useAPI();
+  const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
   const expensesRows = expenses.map((el) => {
     return (
       <tr key={el.id}>
@@ -29,6 +31,10 @@ export default function Transactions() {
   });
   return (
     <main>
+      <CreateExpense
+        isVisible={createExpenseVisible}
+        toggle={setCreateExpenseVisible}
+      />
       <div className='transactions-container'>
         <TopBar title='Expenses' />
         <div className='transactions-search-row'>
@@ -38,7 +44,10 @@ export default function Transactions() {
             </svg>
             <input type='text' placeholder='Search anything on Transactions' />
           </div>
-          <button className='transactions-create-expense-button'>
+          <button
+            className='transactions-create-expense-button'
+            onClick={() => setCreateExpenseVisible(true)}
+          >
             <svg className='transactions-icon'>
               <use href='/icons/hamburger-icon.svg#Layer_1'></use>
             </svg>
@@ -68,6 +77,7 @@ export default function Transactions() {
           {loading && <Spinner marginTop='2em' />}
         </div>
       </div>
+      <CreateExpense />
     </main>
   );
 }

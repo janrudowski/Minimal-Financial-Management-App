@@ -54,6 +54,7 @@
   font-weight: 600;
   font-size: 0.9rem;
   color: #1b212d;
+  cursor: pointer;
 }
 .transactions-create-expense-button .transactions-icon {
   fill: #1b212d;
@@ -69,6 +70,7 @@
   margin-right: 2em;
   font-weight: 500;
   color: var(--text-one);
+  cursor: pointer;
 }
 
 .transactions-expenses-table-container {
@@ -115,4 +117,5 @@
   font-weight: 600;
   font-size: 0.8rem;
   border-radius: 5px;
+  cursor: pointer;
 }

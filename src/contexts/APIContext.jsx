@@ -24,7 +24,16 @@ import React, {
   useState,
 } from 'react';
 import { db } from '../config';
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+  Timestamp,
+  where,
+} from 'firebase/firestore';
 import { nanoid, invoice } from '../utils/generateId';
 import { useAuth } from './AuthContext';
 const APIContext = createContext();
@@ -56,9 +65,6 @@ function reducer(state, { type, payload }) {
       };
   }
 }
-
-console.log(nanoid());
-console.log(invoice());
 
 function init() {
   return {
@@ -94,10 +100,18 @@ export function APIContextProvider({ children }) {
     setLoading(false);
   }
 
+  // async function addExpense(title, amount, type, date) {
+  //   const id = nanoid();
+  //   const invoiceid = invoice();
+  //   const timestamp = Timestamp.fromDate(date);
+
+  //   setDoc(doc(db, 'expenses'));
+  // } //TODO: finish then change getting data to onSnapshot event
+
   useEffect(() => {
     getExpenses();
   }, []);
-  console.log(currentUser);
+
   return (
     <APIContext.Provider value={{ ...apiData, loading, dispatch }}>
       {children}

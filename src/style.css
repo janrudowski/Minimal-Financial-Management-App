@@ -8,6 +8,7 @@
   --background-three: #fafafa;
   --background-four: #e8e8e8;
   --background-five: #f8f8f8;
+  --background-six: #fff;
   --border-one: #f5f5f5;
   --dark: #363a3f;
   --dark-two: #201e34;
@@ -19,6 +20,7 @@
   --gray-two: #f8f8f8;
   --text-one: #1b212d;
   --text-two: #929eae;
+  --color-scheme: default;
 }
 
 *,
@@ -104,5 +106,7 @@ img {
   --background-four: #292642;
   --dark: #282541;
   --background-five: #282541;
+  --background-six: #1b212d;
   --border-one: #282541;
+  --color-scheme: dark;
 }

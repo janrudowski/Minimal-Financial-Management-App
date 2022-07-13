@@ -8,6 +8,8 @@
 
 .spinner {
   animation: spin 1s infinite linear;
+  position: relative;
+  z-index: 8;
 }
 
 @keyframes spin {
