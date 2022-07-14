@@ -7,7 +7,13 @@ import './dashboard.css';
 import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
-  const { recentExpenses, totalSpending, loading } = useAPI();
+  const {
+    recentExpenses,
+    totalSpending,
+    monthlySpending,
+    dailySpending,
+    loading,
+  } = useAPI();
   const recentExpensesRows = recentExpenses.map((el) => {
     return (
       <tr key={el.id}>
@@ -59,7 +65,14 @@ export default function Dashboard() {
                 <p className='dashboard-spending-card-main-title'>
                   Monthly spending
                 </p>
-                <h4 className='dashboard-spending-card-main-price'>$250.80</h4>
+                <h4 className='dashboard-spending-card-main-price'>
+                  {' '}
+                  {loading ? (
+                    <Spinner width='1.2rem' height='1.2rem' />
+                  ) : (
+                    `$${monthlySpending}`
+                  )}
+                </h4>
               </div>
             </div>
             <div className='dashboard-spending-card'>
@@ -72,7 +85,14 @@ export default function Dashboard() {
                 <p className='dashboard-spending-card-main-title'>
                   Daily spending
                 </p>
-                <h4 className='dashboard-spending-card-main-price'>$10.25</h4>
+                <h4 className='dashboard-spending-card-main-price'>
+                  {' '}
+                  {loading ? (
+                    <Spinner width='1.2rem' height='1.2rem' />
+                  ) : (
+                    `$${dailySpending}`
+                  )}
+                </h4>
               </div>
             </div>
           </div>

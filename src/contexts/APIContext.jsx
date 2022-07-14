@@ -28,6 +28,7 @@ import {
   collection,
   doc,
   getDocs,
+  onSnapshot,
   orderBy,
   query,
   setDoc,
@@ -46,11 +47,48 @@ export const ACTIONS = {
   SET_DATA: 'set-data', //update state with data from db
 };
 
-function getTotalSpending(expenses) {
-  const value = expenses.reduce((acc, el) => {
-    return acc + el.amount;
-  }, 0);
-  return value.toFixed(2);
+function sumCallback(acc, el) {
+  return acc + el.amount;
+}
+
+function getSpendings(expenses) {
+  const now = new Date();
+  const monthNow = now.getMonth();
+  console.log('this is month now', monthNow);
+  const dayNow = now.getDate();
+  const yearNow = now.getFullYear();
+
+  const totalSpending = expenses.reduce(sumCallback, 0).toFixed(2);
+
+  const dailySpending = expenses
+    .filter((el) => {
+      const date = new Date(el.date.seconds * 1000);
+      if (
+        date.getDate() === dayNow &&
+        date.getMonth() === monthNow &&
+        date.getFullYear() === yearNow
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .reduce(sumCallback, 0)
+    .toFixed(2);
+
+  const monthlySpending = expenses
+    .filter((el) => {
+      const date = new Date(el.date.seconds * 1000);
+      if (date.getMonth() === monthNow && date.getFullYear() === yearNow) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .reduce(sumCallback, 0)
+    .toFixed(2);
+
+  return { totalSpending, dailySpending, monthlySpending };
 }
 
 function reducer(state, { type, payload }) {
@@ -61,7 +99,7 @@ function reducer(state, { type, payload }) {
         ...state,
         expenses: expenses,
         recentExpenses: expenses.slice(0, 3),
-        totalSpending: getTotalSpending(expenses),
+        ...getSpendings(expenses),
       };
   }
 }
@@ -83,37 +121,71 @@ export function APIContextProvider({ children }) {
 
   const { currentUser } = useAuth();
 
+  class Expense {
+    constructor(name, business, type, amount, date) {
+      this.uid = currentUser.uid;
+      this.id = nanoid();
+      this.invoiceid = invoice();
+      this.name = name;
+      this.business = business;
+      this.type = type;
+      this.amount = amount;
+      this.date = this._convertToTimestamp(new Date(date));
+    }
+    _convertToTimestamp(date) {
+      return Timestamp.fromDate(date);
+    }
+  }
+
+  // async function getExpenses() {
+  //   if (!currentUser) return;
+
+  //   const expensesColRef = collection(db, 'expenses');
+  //   const expensesOrderedQuery = query(
+  //     expensesColRef,
+  //     where('uid', '==', currentUser.uid),
+  //     orderBy('date', 'desc')
+  //   );
+  //   const snapshot = await getDocs(expensesOrderedQuery);
+  //   const expenses = snapshot.docs.map((doc) => {
+  //     return { id: doc.id, ...doc.data() };
+  //   });
+  //   dispatch({ type: ACTIONS.SET_DATA, payload: { expenses: expenses } });
+  //   setLoading(false);
+  // }
+
   async function getExpenses() {
     if (!currentUser) return;
-
     const expensesColRef = collection(db, 'expenses');
     const expensesOrderedQuery = query(
       expensesColRef,
       where('uid', '==', currentUser.uid),
       orderBy('date', 'desc')
     );
-    const snapshot = await getDocs(expensesOrderedQuery);
-    const expenses = snapshot.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() };
+    onSnapshot(expensesOrderedQuery, (snapshot) => {
+      const expenses = snapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+      dispatch({ type: ACTIONS.SET_DATA, payload: { expenses: expenses } });
+      setLoading(false);
     });
-    dispatch({ type: ACTIONS.SET_DATA, payload: { expenses: expenses } });
-    setLoading(false);
   }
 
-  // async function addExpense(title, amount, type, date) {
-  //   const id = nanoid();
-  //   const invoiceid = invoice();
-  //   const timestamp = Timestamp.fromDate(date);
-
-  //   setDoc(doc(db, 'expenses'));
-  // } //TODO: finish then change getting data to onSnapshot event
+  async function addExpense(title, business, type, amount, date) {
+    const expense = new Expense(title, business, type, amount, date);
+    try {
+      await setDoc(doc(db, 'expenses', expense.id), { ...expense });
+    } catch (err) {
+      throw err;
+    }
+  }
 
   useEffect(() => {
     getExpenses();
   }, []);
 
   return (
-    <APIContext.Provider value={{ ...apiData, loading, dispatch }}>
+    <APIContext.Provider value={{ ...apiData, loading, dispatch, addExpense }}>
       {children}
     </APIContext.Provider>
   );

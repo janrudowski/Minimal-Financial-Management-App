@@ -81,7 +81,7 @@
   font-weight: 600;
   padding: 1em 0;
   border-radius: 10px;
-  color: #000;
+  color: var(--text-two);
   border: none;
   cursor: pointer;
 }
