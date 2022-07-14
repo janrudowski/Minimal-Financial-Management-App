@@ -86,7 +86,7 @@ export default function Login() {
                 onChange={handleChange}
                 checked={formData.isRemember}
               />
-              <label htmlFor='remember'>Remember for 30 days</label>
+              <label htmlFor='isRemember'>Remember for 30 days</label>
             </div>
             {errMsg.length > 0 && <p className='invalid'>{errMsg}</p>}
             <button className='signin-btn'>Sign in</button>

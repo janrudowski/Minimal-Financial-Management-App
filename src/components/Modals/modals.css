@@ -1,0 +1,120 @@
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(27, 33, 45, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-window {
+  width: 90%;
+  height: 80%;
+  max-width: 600px;
+  max-height: 650px;
+  background: var(--background-six);
+  color: var(--text-one);
+  border-radius: 10px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 3em 0 4em;
+  position: relative;
+  z-index: 999;
+}
+
+.modal-form input {
+  padding: 1em 1em;
+  margin: 1em 0;
+  outline: none;
+  border: solid 1px var(--border-one);
+  color: var(--text-one);
+  background: transparent;
+  border-radius: 10px;
+}
+
+.modal-form-image-upload-button {
+  margin-bottom: auto;
+  width: 50px;
+  height: 50px;
+  padding: 1em;
+  border: none;
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    180deg,
+    rgba(119, 119, 119, 0.4) 0%,
+    rgba(35, 35, 35, 0.1) 100%
+  );
+  backdrop-filter: blur(50px);
+}
+
+.modal-form-image-upload-icon {
+  width: 20px;
+  height: 20px;
+  fill: var(--text-one);
+}
+
+.modal-form-input-date {
+  color-scheme: var(--color-scheme);
+  width: 50%;
+}
+
+#recurringcheckbox {
+  margin: 0 0.5em 0 1em;
+  accent-color: var(--text-one);
+}
+
+.modal-form-submit {
+  background: var(--primary-green);
+  font-weight: 600;
+  padding: 1em 0;
+  border-radius: 10px;
+  color: var(--text-two);
+  border: none;
+  cursor: pointer;
+}
+
+.modal-hidden {
+  display: none;
+}
+
+.modal-close {
+  margin: 0.5em;
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-two);
+  color: var(--text-one);
+}
+
+.modal-form-invalid-input {
+  border: 1px #dc3545 solid !important;
+}
+
+.modal-form-error-message {
+  margin-left: 1em;
+  margin-top: -0.75em; /* bad practice */
+  color: #dc3545;
+  font-weight: 400;
+}
+
+.modal-form-row {
+  display: flex;
+  align-items: center;
+}

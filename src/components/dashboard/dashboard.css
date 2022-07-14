@@ -150,6 +150,7 @@
   max-width: 40px;
   max-height: 40px;
   object-fit: cover;
+  border-radius: 5px;
 }
 .expenses-table-name-column-title-container {
   margin-left: 1em;
