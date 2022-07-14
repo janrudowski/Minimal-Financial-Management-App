@@ -181,8 +181,9 @@ export function APIContextProvider({ children }) {
   }
 
   useEffect(() => {
+    setLoading(true);
     getExpenses();
-  }, []);
+  }, [currentUser]);
 
   return (
     <APIContext.Provider value={{ ...apiData, loading, dispatch, addExpense }}>
