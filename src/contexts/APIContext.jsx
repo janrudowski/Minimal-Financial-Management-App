@@ -54,7 +54,6 @@ function sumCallback(acc, el) {
 function getSpendings(expenses) {
   const now = new Date();
   const monthNow = now.getMonth();
-  console.log('this is month now', monthNow);
   const dayNow = now.getDate();
   const yearNow = now.getFullYear();
 
