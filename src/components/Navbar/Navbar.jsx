@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './navbar.css';
 import { useAuth } from '../../contexts/AuthContext';
 import Darkmodeswitch from '../DarkModeSwitch/DarkModeSwitch';
