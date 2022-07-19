@@ -5,7 +5,6 @@ import './topbar.css';
 
 export default function TopBar({ title }) {
   const { currentUser } = useAuth();
-  console.log(currentUser);
   const { loading } = useAPI();
   return (
     <div className='top-bar'>
