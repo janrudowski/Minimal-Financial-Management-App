@@ -7,6 +7,7 @@ import {
   updateProfile,
   updatePassword,
   updateEmail,
+  updatePhoneNumber,
 } from 'firebase/auth';
 import { auth } from '../config';
 
@@ -55,6 +56,7 @@ export function AuthContextProvider({ children }) {
         updateUser,
         updatePassword,
         updateEmail,
+        updatePhoneNumber,
       }}
     >
       {!loading && children}

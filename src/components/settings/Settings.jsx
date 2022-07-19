@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import AuthModal from '../Modals/AuthModal';
 import Spinner from '../Spinner/Spinner';
 import TopBar from '../TopBar/TopBar';
 import './settings.css';
@@ -11,6 +12,7 @@ export default function Settings() {
     updatePassword,
     updateUser,
     updateEmail,
+    updatePhoneNumber,
   } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -23,6 +25,7 @@ export default function Settings() {
 
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState({
     name: '',
     email: '',
@@ -58,24 +61,32 @@ export default function Settings() {
       promises.push(updateEmail(currentUser, email));
     }
 
-    promises.push(
-      updateUser(currentUser, {
-        ...(name !== '' &&
-          name !== currentUser.displayName && { displayName: name }),
-        ...(phone !== '' &&
-          phone !== currentUser.phoneNumber && { phoneNumber: phone }),
-      })
-    );
+    if (name !== currentUser.displayName && name !== '') {
+      promises.push(
+        updateUser(currentUser, {
+          displayName: name,
+        })
+      );
+    }
+
+    // if (phoneNumber !== '' && phoneNumber !== phone) {
+    //   promises.push(updatePhoneNumber(currentUser, phone));
+    // }
 
     try {
       setLoading(true);
       setDisabled(true);
       await Promise.all(promises);
     } catch (err) {
-      console.log(err.code);
+      console.error(err.code);
+      if (err.code === 'auth/requires-recent-login') {
+        setShowModal(true);
+      }
       //TODO: add requires recent login handler and add proper error handling overall
+      //TODO: FIX PHONE cant update with updateuser use updatePhoneNumbercredentails (hard to do needs captcha and sending sms verification)
     }
 
+    // console.log(currentUser);
     setLoading(false);
   }
 
@@ -190,6 +201,7 @@ export default function Settings() {
           </form>
         </div>
       </div>
+      {showModal && <AuthModal />}
     </main>
   );
 }
