@@ -8,14 +8,16 @@ export default function CreateExpense({ isVisible, toggle }) {
 
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     title: '',
     business: '',
     amount: '',
     type: '',
     date: '',
     recurring: false,
-  });
+  };
+
+  const [formData, setFormData] = useState({ ...initialFormData });
 
   const [error, setError] = useState({
     title: '',
@@ -66,6 +68,8 @@ export default function CreateExpense({ isVisible, toggle }) {
     setLoading(false);
     setSuccess('✔');
     setTimeout(() => {
+      setSuccess('Add');
+      setFormData({ ...initialFormData });
       toggle(false);
     }, 1000);
   }

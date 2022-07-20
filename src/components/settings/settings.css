@@ -49,14 +49,11 @@
   display: flex;
   gap: 40px;
   margin-bottom: 30px;
+  max-width: 840px;
+  width: 100%;
 }
 .input-container {
-  width: 400px;
-  display: flex;
-  flex-direction: column;
-}
-.inputEmail-container {
-  width: 840px;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -68,6 +65,7 @@
   background: none;
   color: var(--secondary-green);
   font-size: 1.1rem;
+  cursor: pointer;
 }
 .update-btn {
   background-color: var(--secondary-green);
@@ -77,4 +75,24 @@
   width: 190px;
   border-radius: 10px;
   font-size: 1rem;
+  cursor: pointer;
+}
+
+.form-row-span-two {
+  /* background: blue; */
+}
+
+.settings-form-disabled-input {
+  background: var(--background-four) !important;
+  cursor: not-allowed;
+}
+
+.update-btn-disabled {
+  background: #189062;
+  cursor: not-allowed;
+}
+
+.settings-form-error-message {
+  color: #dc3545;
+  margin: 0.5em 0;
 }

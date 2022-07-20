@@ -4,7 +4,7 @@ import './Signup.css';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 export default function Signup() {
-  const { signup } = useAuth();
+  const { signup, updateUser } = useAuth();
   const navigation = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
@@ -25,9 +25,11 @@ export default function Signup() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const { email, password } = formData;
+    const { email, password, fullName } = formData;
     try {
-      await signup(email, password);
+      const { user } = await signup(email, password);
+      await updateUser(user, fullName);
+      console.log(user);
       navigation('/');
     } catch (error) {
       setErrMsg(() => {
@@ -79,6 +81,7 @@ export default function Signup() {
             />
             <label htmlFor='password'>Password</label>
             <input
+              autoComplete='on'
               type='password'
               name='password'
               id='password'

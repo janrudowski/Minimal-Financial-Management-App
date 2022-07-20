@@ -118,3 +118,24 @@
   display: flex;
   align-items: center;
 }
+
+.modal-window-title {
+  text-align: center;
+  color: var(--text-one);
+  margin-bottom: 2em;
+  font-size: 1.3rem;
+}
+
+.modal-window-auth {
+  max-height: 450px;
+}
+
+.modal-form-submit-auth {
+  margin-top: 1em;
+}
+
+.modal-form-error-message-auth {
+  text-align: center;
+  margin-top: 1em;
+  color: #dc3545;
+}

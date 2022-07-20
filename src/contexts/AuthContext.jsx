@@ -4,6 +4,12 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  updateProfile,
+  updatePassword,
+  updateEmail,
+  updatePhoneNumber,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from 'firebase/auth';
 import { auth } from '../config';
 
@@ -25,8 +31,17 @@ export function AuthContextProvider({ children }) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 
+  function updateUser(user, properties) {
+    return updateProfile(user, properties);
+  }
+
   function logout() {
     signOut(auth);
+  }
+
+  function reauth(email, password) {
+    const credential = EmailAuthProvider.credential(email, password);
+    return reauthenticateWithCredential(currentUser, credential);
   }
 
   React.useEffect(() => {
@@ -38,7 +53,20 @@ export function AuthContextProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, signup, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        loading,
+        currentUser,
+        signup,
+        login,
+        logout,
+        updateUser,
+        updatePassword,
+        updateEmail,
+        updatePhoneNumber,
+        reauth,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );
