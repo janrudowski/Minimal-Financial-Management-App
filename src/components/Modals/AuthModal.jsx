@@ -1,86 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './modals.css';
 import Spinner from '../Spinner/Spinner';
-export default function FilterExpenses() {
+import { useAuth } from '../../contexts/AuthContext';
+export default function FilterExpenses({ isModalVisible, setIsModalVisible }) {
+  const { currentUser, reauth } = useAuth();
   const toggle = () => {};
-  const handleSubmit = 12;
-  const handleChange = 12;
-  const handleError = 12;
-  const formData = {};
-  const error = 12;
-  const loading = 23;
-  const success = 12;
-  const isVisible = true;
+
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: currentUser.email,
+    password: '',
+  });
+
+  const [error, setError] = useState('');
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setFormData((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      await reauth(formData.email, formData.password);
+      setIsModalVisible(false);
+    } catch (err) {
+      if (err.code === 'auth/wrong-password') {
+        setError('Password is incorrect.');
+      }
+    }
+    setLoading(false);
+  }
+
   return (
-    <div className={`modal ${!isVisible ? 'modal-hidden' : ''}`}>
-      <div className='modal-window'>
+    <div className={`modal ${!isModalVisible ? 'modal-hidden' : ''}`}>
+      <div className='modal-window modal-window-auth'>
         <div className='modal-close' onClick={() => toggle(false)}>
           X
         </div>
         <form onSubmit={handleSubmit} className='modal-form'>
+          <h2 className='modal-window-title'>
+            You need to authenticate before changing your email/password.
+          </h2>
           <input
-            className={`${error.title ? 'modal-form-invalid-input' : ''}`}
+            className={`${error.email ? 'modal-form-invalid-input' : ''}`}
             onChange={handleChange}
             type='text'
-            placeholder='Title'
-            name='title'
-            value={formData.title}
+            placeholder='Email'
+            name='email'
+            value={formData.email}
+            disabled={true}
           />
           <h6 className='modal-form-error-message'>{error.title}</h6>
           <input
-            className={`${error.business ? 'modal-form-invalid-input' : ''}`}
+            className={`${error.password ? 'modal-form-invalid-input' : ''}`}
             onChange={handleChange}
-            type='text'
-            placeholder='Business (optional)'
-            name='business'
-            value={formData.business}
+            type='password'
+            placeholder='Password'
+            name='password'
+            value={formData.password}
+            autoComplete='on'
           />
-          <h6 className='modal-form-error-message'>{error.business}</h6>
-          <input
-            className={`${error.amount ? 'modal-form-invalid-input' : ''}`}
-            onChange={handleChange}
-            type='text'
-            placeholder='Amount'
-            name='amount'
-            value={formData.amount}
-          />
-          <h6 className='modal-form-error-message'>{error.amount}</h6>
-          <input
-            className={`${error.type ? 'modal-form-invalid-input' : ''}`}
-            onChange={handleChange}
-            type='text'
-            placeholder='Type'
-            name='type'
-            value={formData.type}
-          />
-          <h6 className='modal-form-error-message'>{error.type}</h6>
-          <div className='modal-form-row'>
-            <input
-              onChange={handleChange}
-              className={`modal-form-input-date ${
-                error.date ? 'modal-form-invalid-input' : ''
-              }`}
-              type='date'
-              name='date'
-              value={formData.date}
-            />
-            <input
-              onChange={handleChange}
-              checked={formData.recurring}
-              type='checkbox'
-              name='recurring'
-              id='recurringcheckbox'
-            />
-            <label htmlFor='recurringcheckbox'>Recurring</label>
-          </div>
-          <button className='modal-form-image-upload-button'>
-            <svg className='modal-form-image-upload-icon'>
-              <use href='/icons/camera-icon.svg#Capa_1'></use>
-            </svg>
+          <h6 className='modal-form-error-message'>{error.password}</h6>
+          <button
+            disabled={loading}
+            className='modal-form-submit modal-form-submit-auth'
+          >
+            {loading ? <Spinner width='1rem' height='1rem' /> : 'Authenticate'}
           </button>
-          <button disabled={loading} className='modal-form-submit'>
-            {loading ? <Spinner width='1rem' height='1rem' /> : success}
-          </button>
+          <h5 className='modal-form-error-message-auth'>{error}</h5>
         </form>
       </div>
     </div>

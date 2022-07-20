@@ -91,3 +91,8 @@
   background: #189062;
   cursor: not-allowed;
 }
+
+.settings-form-error-message {
+  color: #dc3545;
+  margin: 0.5em 0;
+}

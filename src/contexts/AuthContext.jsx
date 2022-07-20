@@ -8,6 +8,8 @@ import {
   updatePassword,
   updateEmail,
   updatePhoneNumber,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from 'firebase/auth';
 import { auth } from '../config';
 
@@ -37,6 +39,11 @@ export function AuthContextProvider({ children }) {
     signOut(auth);
   }
 
+  function reauth(email, password) {
+    const credential = EmailAuthProvider.credential(email, password);
+    return reauthenticateWithCredential(currentUser, credential);
+  }
+
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -57,6 +64,7 @@ export function AuthContextProvider({ children }) {
         updatePassword,
         updateEmail,
         updatePhoneNumber,
+        reauth,
       }}
     >
       {!loading && children}

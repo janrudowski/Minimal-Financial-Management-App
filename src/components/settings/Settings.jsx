@@ -23,9 +23,9 @@ export default function Settings() {
     passwordConfirm: '',
   });
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState({
     name: '',
     email: '',
@@ -49,11 +49,18 @@ export default function Settings() {
     const { name, email, phone, password, passwordConfirm } = formData;
     let promises = [];
     console.log(formData);
-    if (
-      password === passwordConfirm &&
-      password !== '' &&
-      passwordConfirm !== ''
-    ) {
+
+    if (password !== passwordConfirm) {
+      setError((prev) => {
+        return {
+          ...prev,
+          password: 'Passwords do not match.',
+        };
+      });
+      return;
+    }
+
+    if (password !== '' && passwordConfirm !== '') {
       promises.push(updatePassword(currentUser, password));
     }
 
@@ -73,14 +80,31 @@ export default function Settings() {
     //   promises.push(updatePhoneNumber(currentUser, phone));
     // }
 
+    setError((prev) => {
+      return {
+        ...prev,
+        password: '',
+      };
+    });
+
     try {
       setLoading(true);
       setDisabled(true);
       await Promise.all(promises);
     } catch (err) {
+      setDisabled(false);
       console.error(err.code);
       if (err.code === 'auth/requires-recent-login') {
-        setShowModal(true);
+        setIsModalVisible(true);
+      }
+
+      if (err.code === 'auth/weak-password') {
+        setError((prev) => {
+          return {
+            ...prev,
+            password: 'Password must be at lest 8 characters.',
+          };
+        });
       }
       //TODO: add requires recent login handler and add proper error handling overall
       //TODO: FIX PHONE cant update with updateuser use updatePhoneNumbercredentails (hard to do needs captcha and sending sms verification)
@@ -189,7 +213,9 @@ export default function Settings() {
                   onChange={handleChange}
                   autoComplete='on'
                 />
-                <h6>Passwords do not match</h6>
+                <h5 className='settings-form-error-message'>
+                  {error.password}
+                </h5>
               </div>
             </div>
             <button
@@ -201,7 +227,10 @@ export default function Settings() {
           </form>
         </div>
       </div>
-      {showModal && <AuthModal />}
+      <AuthModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      />
     </main>
   );
 }
