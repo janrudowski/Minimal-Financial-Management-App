@@ -33,6 +33,7 @@ import {
   query,
   setDoc,
   Timestamp,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import { nanoid, invoice } from '../utils/generateId';
@@ -179,13 +180,26 @@ export function APIContextProvider({ children }) {
     }
   }
 
+  async function editExpense(id, data) {
+    const { date } = data;
+    const timestamp = Timestamp.fromDate(new Date(date));
+    try {
+      const docRef = doc(db, 'expenses', id);
+      await updateDoc(docRef, { ...data, date: timestamp });
+    } catch (err) {
+      throw err;
+    }
+  }
+
   useEffect(() => {
     setLoading(true);
     getExpenses();
   }, [currentUser]);
 
   return (
-    <APIContext.Provider value={{ ...apiData, loading, dispatch, addExpense }}>
+    <APIContext.Provider
+      value={{ ...apiData, loading, dispatch, addExpense, editExpense }}
+    >
       {children}
     </APIContext.Provider>
   );

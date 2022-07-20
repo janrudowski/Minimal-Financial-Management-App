@@ -106,7 +106,7 @@ export default function Settings() {
           };
         });
       }
-      //TODO: add requires recent login handler and add proper error handling overall
+      // ///TODO: add requires recent login handler and add proper error handling overall (done ✔)
       //TODO: FIX PHONE cant update with updateuser use updatePhoneNumbercredentails (hard to do needs captcha and sending sms verification)
     }
 

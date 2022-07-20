@@ -4,11 +4,20 @@ import Spinner from '../Spinner/Spinner';
 import TopBar from '../TopBar/TopBar';
 import { formatDate } from '../../utils/formatDate';
 import CreateExpense from '../Modals/CreateExpense';
+import EditExpense from '../Modals/EditExpense';
 import './transactions.css';
 
 export default function Transactions() {
   const { expenses, loading } = useAPI();
   const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
+  const [currentEdited, setCurrentEdited] = useState(null);
+  const [editExpenseVisible, setEditExpenseVisible] = useState(false);
+
+  function handleEdit(el) {
+    setEditExpenseVisible(true);
+    setCurrentEdited(el);
+  }
+
   const expensesRows = expenses.map((el) => {
     return (
       <tr key={el.id}>
@@ -24,7 +33,12 @@ export default function Transactions() {
         <td>{formatDate(el.date.seconds)}</td>
         <td>{el.invoiceid}</td>
         <td>
-          <button className='expenses-table-edit-button'>Edit</button>
+          <button
+            className='expenses-table-edit-button'
+            onClick={() => handleEdit(el)}
+          >
+            Edit
+          </button>
         </td>
       </tr>
     );
@@ -35,6 +49,13 @@ export default function Transactions() {
         isVisible={createExpenseVisible}
         toggle={setCreateExpenseVisible}
       />
+      {editExpenseVisible && (
+        <EditExpense
+          isVisible={editExpenseVisible}
+          toggle={setEditExpenseVisible}
+          currentEdited={currentEdited}
+        />
+      )}
       <div className='transactions-container'>
         <TopBar title='Expenses' />
         <div className='transactions-search-row'>
@@ -77,7 +98,6 @@ export default function Transactions() {
           {loading && <Spinner marginTop='2em' />}
         </div>
       </div>
-      <CreateExpense />
     </main>
   );
 }

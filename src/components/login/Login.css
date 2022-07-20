@@ -48,6 +48,7 @@
   background-color: #c8ee44;
   height: 48px;
   font-weight: 600;
+  cursor: pointer;
 }
 .signin-google-btn {
   display: flex;
