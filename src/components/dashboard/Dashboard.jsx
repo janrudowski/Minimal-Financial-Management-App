@@ -5,6 +5,16 @@ import { formatDate } from '../../utils/formatDate';
 import Spinner from '../Spinner/Spinner';
 import './dashboard.css';
 import { Link } from 'react-router-dom';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
 export default function Dashboard() {
   const {
@@ -13,7 +23,15 @@ export default function Dashboard() {
     monthlySpending,
     dailySpending,
     loading,
+    expenses,
   } = useAPI();
+
+  const chartData = expenses
+    .map((expense) => {
+      return { amount: expense.amount, date: formatDate(expense.date.seconds) };
+    })
+    .reverse();
+
   const recentExpensesRows = recentExpenses.map((el) => {
     return (
       <tr key={el.id}>
@@ -97,8 +115,22 @@ export default function Dashboard() {
             </div>
           </div>
           <div className='chart-container'>
-            {/* todo: use recharts library and generate graph based on data */}
-            <img src='/images/Graph.png' alt='graph' />
+            <h3>Expenses</h3>
+            <ResponsiveContainer width='100%' height='100%'>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray='0' horizontal={false} />
+                <XAxis dataKey='date' />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type='monotone'
+                  dataKey='amount'
+                  stroke='#8884d8'
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
           <div className='recent-expenses-container'>
             <div className='expenses-header'>
