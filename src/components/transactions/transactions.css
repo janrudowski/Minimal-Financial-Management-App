@@ -119,3 +119,30 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+.transactions-expenses-table-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--text-one);
+  margin-top: 1em;
+}
+
+.transactions-expenses-table-navigation button {
+  border: none;
+  background: var(--primary-green);
+  cursor: pointer;
+  padding: 0.5em 1em;
+  border-radius: 10px;
+}
+
+.transactions-expenses-table-navigation-icon {
+  width: 1rem;
+  height: 1rem;
+  fill: var(--text-one);
+}
+
+.chevron-left {
+  transform: rotate(180deg);
+}

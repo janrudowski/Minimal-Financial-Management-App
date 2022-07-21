@@ -46,6 +46,7 @@ export function useAPI() {
 
 export const ACTIONS = {
   SET_DATA: 'set-data', //update state with data from db
+  CHANGE_PAGE: 'change-page', //change the current expenses page
 };
 
 function sumCallback(acc, el) {
@@ -95,11 +96,23 @@ function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.SET_DATA:
       const { expenses } = payload;
+      const pages = Math.ceil(expenses.length / state.perPage);
       return {
         ...state,
         expenses: expenses,
         recentExpenses: expenses.slice(0, 3),
+        currentPageExpenses: expenses.slice(0, state.perPage),
+        pages: pages,
         ...getSpendings(expenses),
+      };
+    case ACTIONS.CHANGE_PAGE:
+      const { page } = payload;
+      let start = (page - 1) * state.perPage;
+      let end = page * state.perPage;
+      return {
+        ...state,
+        currentPage: page,
+        currentPageExpenses: state.expenses.slice(start, end),
       };
   }
 }
@@ -112,6 +125,10 @@ function init() {
     expenses: [],
     recurringExpenses: [],
     recentExpenses: [],
+    currentPageExpenses: [],
+    currentPage: 1,
+    pages: null,
+    perPage: 10,
   };
 }
 
@@ -191,6 +208,11 @@ export function APIContextProvider({ children }) {
     }
   }
 
+  function goToPage(page) {
+    if (page > apiData.pages || page < 1) return;
+    dispatch({ type: ACTIONS.CHANGE_PAGE, payload: { page: page } });
+  }
+
   useEffect(() => {
     setLoading(true);
     getExpenses();
@@ -198,7 +220,14 @@ export function APIContextProvider({ children }) {
 
   return (
     <APIContext.Provider
-      value={{ ...apiData, loading, dispatch, addExpense, editExpense }}
+      value={{
+        ...apiData,
+        loading,
+        dispatch,
+        addExpense,
+        editExpense,
+        goToPage,
+      }}
     >
       {children}
     </APIContext.Provider>

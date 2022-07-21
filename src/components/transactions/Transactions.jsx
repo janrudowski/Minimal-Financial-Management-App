@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAPI } from '../../contexts/APIContext';
 import Spinner from '../Spinner/Spinner';
 import TopBar from '../TopBar/TopBar';
@@ -8,7 +8,8 @@ import EditExpense from '../Modals/EditExpense';
 import './transactions.css';
 
 export default function Transactions() {
-  const { expenses, loading } = useAPI();
+  const { currentPageExpenses, currentPage, pages, loading, goToPage } =
+    useAPI();
   const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
   const [currentEdited, setCurrentEdited] = useState(null);
   const [editExpenseVisible, setEditExpenseVisible] = useState(false);
@@ -18,7 +19,7 @@ export default function Transactions() {
     setCurrentEdited(el);
   }
 
-  const expensesRows = expenses.map((el) => {
+  const expensesRows = currentPageExpenses.map((el) => {
     return (
       <tr key={el.id}>
         <td className='expenses-table-name-column'>
@@ -95,7 +96,30 @@ export default function Transactions() {
             </thead>
             <tbody>{!loading && expensesRows}</tbody>
           </table>
+
           {loading && <Spinner marginTop='2em' />}
+
+          <div className='transactions-expenses-table-navigation'>
+            {!loading && currentPage !== 1 && (
+              <button onClick={() => goToPage(currentPage - 1)}>
+                <svg className='transactions-expenses-table-navigation-icon chevron-left'>
+                  <use href='/icons/chevron-icon.svg#Layer_1'></use>
+                </svg>
+              </button>
+            )}
+            {!loading && (
+              <span>
+                Page {currentPage}/{pages}
+              </span>
+            )}
+            {!loading && currentPage !== pages && (
+              <button onClick={() => goToPage(currentPage + 1)}>
+                <svg className='transactions-expenses-table-navigation-icon chevron-right'>
+                  <use href='/icons/chevron-icon.svg#Layer_1'></use>
+                </svg>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </main>
