@@ -44,6 +44,7 @@ export default function Transactions() {
       </tr>
     );
   });
+
   return (
     <main>
       <CreateExpense
