@@ -19,6 +19,7 @@ import {
 export default function Dashboard() {
   const {
     recentExpenses,
+    recurringExpenses,
     totalSpending,
     monthlySpending,
     dailySpending,
@@ -48,6 +49,24 @@ export default function Dashboard() {
       </tr>
     );
   });
+
+  const recentRecurringExpenses = recurringExpenses.slice(0, 3);
+
+  const recentRecurringExpensesRows = recentRecurringExpenses.map((el) => {
+    return (
+      <div className='reccuring-expense'>
+        <img src='/images/netflix.png' alt='business' />
+        <div className='reccuring-expense-title-container'>
+          <p className='expenses-table-name-column-title'>{el.name}</p>
+          <p className='expenses-table-name-column-subtitle'>{el.business}</p>
+        </div>
+        <div className='expenses-table-amount-column'>${el.amount}</div>
+      </div>
+    );
+  });
+
+  console.log(recurringExpenses);
+
   return (
     <main>
       <div className='dashboard-container'>
@@ -115,7 +134,15 @@ export default function Dashboard() {
             </div>
           </div>
           <div className='chart-container'>
-            <h3>Expenses</h3>
+            <div className='chart-container-header'>
+              <h3>Expenses</h3>
+              {/* //todo: handleChartRange */}
+              <select>
+                <option>7 days</option>
+                <option>Month</option>
+                <option>All time</option>
+              </select>
+            </div>
             <ResponsiveContainer width='100%' height='100%'>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray='0' horizontal={false} />
@@ -167,16 +194,7 @@ export default function Dashboard() {
                 </svg>
               </Link>
             </div>
-            <div className='reccuring-expense'>
-              <img src='/images/netflix.png' alt='business' />
-              <div className='reccuring-expense-title-container'>
-                <p className='expenses-table-name-column-title'>
-                  Netflix Subscription
-                </p>
-                <p className='expenses-table-name-column-subtitle'>Netflix</p>
-              </div>
-              <div className='expenses-table-amount-column'>$132.00</div>
-            </div>
+            {recentRecurringExpensesRows}
           </div>
         </div>
       </div>

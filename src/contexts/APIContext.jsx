@@ -47,6 +47,7 @@ export function useAPI() {
 export const ACTIONS = {
   SET_DATA: 'set-data', //update state with data from db
   CHANGE_PAGE: 'change-page', //change the current expenses page
+  CHANGE_CHART_RANGE: 'change-chart-range',
 };
 
 function sumCallback(acc, el) {
@@ -92,6 +93,10 @@ function getSpendings(expenses) {
   return { totalSpending, dailySpending, monthlySpending };
 }
 
+function getRecurringExpenses(expenses) {
+  return expenses.filter((el) => el.recurring === true);
+}
+
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.SET_DATA:
@@ -102,6 +107,8 @@ function reducer(state, { type, payload }) {
         expenses: expenses,
         recentExpenses: expenses.slice(0, 3),
         currentPageExpenses: expenses.slice(0, state.perPage),
+        recurringExpenses: getRecurringExpenses(expenses),
+        // chartExpenses:
         pages: pages,
         ...getSpendings(expenses),
       };
@@ -126,6 +133,8 @@ function init() {
     recurringExpenses: [],
     recentExpenses: [],
     currentPageExpenses: [],
+    chartExpenses: [],
+    chartOption: 7,
     currentPage: 1,
     pages: null,
     perPage: 10,
@@ -139,7 +148,7 @@ export function APIContextProvider({ children }) {
   const { currentUser } = useAuth();
 
   class Expense {
-    constructor(name, business, type, amount, date) {
+    constructor(name, business, type, amount, date, recurring) {
       this.uid = currentUser.uid;
       this.id = nanoid();
       this.invoiceid = invoice();
@@ -148,6 +157,7 @@ export function APIContextProvider({ children }) {
       this.type = type;
       this.amount = amount;
       this.date = this._convertToTimestamp(new Date(date));
+      this.recurring = recurring;
     }
     _convertToTimestamp(date) {
       return Timestamp.fromDate(date);
@@ -188,8 +198,8 @@ export function APIContextProvider({ children }) {
     });
   }
 
-  async function addExpense(title, business, type, amount, date) {
-    const expense = new Expense(title, business, type, amount, date);
+  async function addExpense(title, business, type, amount, date, recurring) {
+    const expense = new Expense(title, business, type, amount, date, recurring);
     try {
       await setDoc(doc(db, 'expenses', expense.id), { ...expense });
     } catch (err) {
@@ -212,6 +222,10 @@ export function APIContextProvider({ children }) {
     if (page > apiData.pages || page < 1) return;
     dispatch({ type: ACTIONS.CHANGE_PAGE, payload: { page: page } });
   }
+
+  // function handleChartRange(option) {
+  //   dispatch({type: ACTIONS.CHANGE_CHART_RANGE, payload: {option: option}})
+  // }
 
   useEffect(() => {
     setLoading(true);

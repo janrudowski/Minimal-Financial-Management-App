@@ -58,10 +58,10 @@ export default function CreateExpense({ isVisible, toggle }) {
     });
 
     if (!isCorrect) return;
-    const { title, business, amount, type, date } = formData;
+    const { title, business, amount, type, date, recurring } = formData;
     try {
       setLoading(true);
-      await addExpense(title, business, type, Number(amount), date);
+      await addExpense(title, business, type, Number(amount), date, recurring);
     } catch (err) {
       console.log(err); //handle errors here
     }

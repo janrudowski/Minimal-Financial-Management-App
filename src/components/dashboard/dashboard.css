@@ -199,3 +199,15 @@
 .reccuring-expense-title-container {
   margin-right: auto;
 }
+
+.chart-container-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
+}
+
+.chart-container-header select {
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
