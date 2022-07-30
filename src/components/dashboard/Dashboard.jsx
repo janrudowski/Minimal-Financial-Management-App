@@ -20,6 +20,8 @@ export default function Dashboard() {
   const {
     recentExpenses,
     recurringExpenses,
+    chartExpenses,
+    changeChart,
     totalSpending,
     monthlySpending,
     dailySpending,
@@ -27,7 +29,7 @@ export default function Dashboard() {
     expenses,
   } = useAPI();
 
-  const chartData = expenses
+  const chartData = chartExpenses
     .map((expense) => {
       return { amount: expense.amount, date: formatDate(expense.date.seconds) };
     })
@@ -65,7 +67,10 @@ export default function Dashboard() {
     );
   });
 
-  console.log(recurringExpenses);
+  function handleChartChange(event) {
+    const { value: days } = event.target;
+    changeChart(days);
+  }
 
   return (
     <main>
@@ -137,10 +142,10 @@ export default function Dashboard() {
             <div className='chart-container-header'>
               <h3>Expenses</h3>
               {/* //todo: handleChartRange */}
-              <select>
-                <option>7 days</option>
-                <option>Month</option>
-                <option>All time</option>
+              <select onChange={handleChartChange}>
+                <option value={7}>7 days</option>
+                <option value={30}>Month</option>
+                <option value={-1}>All time</option>
               </select>
             </div>
             <ResponsiveContainer width='100%' height='100%'>

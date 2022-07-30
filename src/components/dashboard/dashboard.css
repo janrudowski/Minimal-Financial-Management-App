@@ -64,7 +64,7 @@
 .chart-container {
   width: 100%;
   height: 300px;
-  margin-bottom: 2em;
+  margin-bottom: 4em;
 }
 
 .chart-container img {
@@ -206,8 +206,22 @@
   padding: 1em;
 }
 
+.chart-container-header h3 {
+  color: var(--text-one);
+}
+
 .chart-container-header select {
   border-radius: 5px;
   outline: none;
   border: none;
+  background: transparent;
+  color: var(--text-one);
+}
+
+.chart-container-header option {
+  background: var(--background-four);
+}
+
+.chart-container-header option:hover {
+  box-shadow: 0 0 10px 100px #1882a8 inset;
 }
