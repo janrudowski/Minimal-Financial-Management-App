@@ -97,6 +97,17 @@ function getRecurringExpenses(expenses) {
   return expenses.filter((el) => el.recurring === true);
 }
 
+function getChartExpenses(expenses, days) {
+  if (days < 0) return expenses;
+  return expenses.filter((el) => {
+    const now = Date.now();
+    const timestamp = el.date.seconds * 1000;
+    const daysInMiliSeconds = days * 24 * 60 * 60 * 1000;
+    if (timestamp >= now - daysInMiliSeconds) return true;
+    return false;
+  });
+}
+
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.SET_DATA:
@@ -108,7 +119,7 @@ function reducer(state, { type, payload }) {
         recentExpenses: expenses.slice(0, 3),
         currentPageExpenses: expenses.slice(0, state.perPage),
         recurringExpenses: getRecurringExpenses(expenses),
-        // chartExpenses:
+        chartExpenses: getChartExpenses(expenses, state.chartDays),
         pages: pages,
         ...getSpendings(expenses),
       };
@@ -120,6 +131,13 @@ function reducer(state, { type, payload }) {
         ...state,
         currentPage: page,
         currentPageExpenses: state.expenses.slice(start, end),
+      };
+    case ACTIONS.CHANGE_CHART_RANGE:
+      const { days } = payload;
+      return {
+        ...state,
+        chartExpenses: getChartExpenses(state.expenses, days),
+        chartDays: days,
       };
   }
 }
@@ -134,7 +152,7 @@ function init() {
     recentExpenses: [],
     currentPageExpenses: [],
     chartExpenses: [],
-    chartOption: 7,
+    chartDays: 7,
     currentPage: 1,
     pages: null,
     perPage: 10,
@@ -223,9 +241,9 @@ export function APIContextProvider({ children }) {
     dispatch({ type: ACTIONS.CHANGE_PAGE, payload: { page: page } });
   }
 
-  // function handleChartRange(option) {
-  //   dispatch({type: ACTIONS.CHANGE_CHART_RANGE, payload: {option: option}})
-  // }
+  function changeChart(days) {
+    dispatch({ type: ACTIONS.CHANGE_CHART_RANGE, payload: { days: days } });
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -241,6 +259,7 @@ export function APIContextProvider({ children }) {
         addExpense,
         editExpense,
         goToPage,
+        changeChart,
       }}
     >
       {children}
