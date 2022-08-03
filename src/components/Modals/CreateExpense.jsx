@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { useAPI } from '../../contexts/APIContext';
+import { useCustomSelect } from '../CustomSelect/CustomSelect';
+import CustomSelect from '../CustomSelect/CustomSelect';
 import Spinner from '../Spinner/Spinner';
 import './modals.css';
 
 export default function CreateExpense({ isVisible, toggle }) {
-  const { addExpense } = useAPI();
+  const { addExpense, expenseTypes } = useAPI();
 
   const [loading, setLoading] = useState(false);
+
+  const [selected, setSelected] = useCustomSelect(expenseTypes);
 
   const initialFormData = {
     title: '',
     business: '',
     amount: '',
-    type: '',
     date: '',
     recurring: false,
   };
@@ -24,7 +27,6 @@ export default function CreateExpense({ isVisible, toggle }) {
     business: '',
     amount: null,
     date: null,
-    type: '',
   });
 
   const [success, setSuccess] = useState('Add');
@@ -58,10 +60,17 @@ export default function CreateExpense({ isVisible, toggle }) {
     });
 
     if (!isCorrect) return;
-    const { title, business, amount, type, date, recurring } = formData;
+    const { title, business, amount, date, recurring } = formData;
     try {
       setLoading(true);
-      await addExpense(title, business, type, Number(amount), date, recurring);
+      await addExpense(
+        title,
+        business,
+        selected,
+        Number(amount),
+        date,
+        recurring
+      );
     } catch (err) {
       console.log(err); //handle errors here
     }
@@ -108,15 +117,27 @@ export default function CreateExpense({ isVisible, toggle }) {
             value={formData.amount}
           />
           <h6 className='modal-form-error-message'>{error.amount}</h6>
-          <input
+          {/* <input
             className={`${error.type ? 'modal-form-invalid-input' : ''}`}
             onChange={handleChange}
             type='text'
             placeholder='Type'
             name='type'
             value={formData.type}
+          /> */}
+          <CustomSelect
+            selected={selected}
+            setSelected={setSelected}
+            items={expenseTypes}
+            styles={{
+              background: 'var(--background-six)',
+              border: 'solid 1px var(--border-one)',
+              margin: '1em 0 0 0',
+              color: 'var(--text-one)',
+              fontSize: '0.8em',
+              chevronFill: 'var(--text-one)',
+            }}
           />
-          <h6 className='modal-form-error-message'>{error.type}</h6>
           <div className='modal-form-row'>
             <input
               onChange={handleChange}
