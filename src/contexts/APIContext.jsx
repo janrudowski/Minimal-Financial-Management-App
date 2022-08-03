@@ -156,6 +156,14 @@ function init() {
     currentPage: 1,
     pages: null,
     perPage: 10,
+    expenseTypes: [
+      'Entertainment',
+      'Shopping',
+      'Software',
+      'Subscription',
+      'Mobile',
+      'Withdraw',
+    ],
   };
 }
 

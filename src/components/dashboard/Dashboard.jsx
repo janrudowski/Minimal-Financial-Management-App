@@ -56,7 +56,7 @@ export default function Dashboard() {
 
   const recentRecurringExpensesRows = recentRecurringExpenses.map((el) => {
     return (
-      <div className='reccuring-expense'>
+      <div key={el.id} className='reccuring-expense'>
         <img src='/images/netflix.png' alt='business' />
         <div className='reccuring-expense-title-container'>
           <p className='expenses-table-name-column-title'>{el.name}</p>
