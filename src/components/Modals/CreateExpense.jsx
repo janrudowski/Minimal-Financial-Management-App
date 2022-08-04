@@ -157,7 +157,7 @@ export default function CreateExpense({ isVisible, toggle }) {
             />
             <label htmlFor='recurringcheckbox'>Recurring</label>
           </div>
-          <button className='modal-form-image-upload-button'>
+          <button className='modal-form-image-upload-button' type='button'>
             <svg className='modal-form-image-upload-icon'>
               <use href='/icons/camera-icon.svg#Capa_1'></use>
             </svg>
