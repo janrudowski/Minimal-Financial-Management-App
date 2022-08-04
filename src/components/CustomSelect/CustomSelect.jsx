@@ -4,6 +4,8 @@ import './customselect.css';
 //#dcdfe4
 
 export function useCustomSelect(items, init = items[0]) {
+  if (!items.includes(init))
+    throw new Error('The initial value must belong to the items array');
   return useState(init);
 }
 
