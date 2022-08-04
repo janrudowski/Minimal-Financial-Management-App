@@ -155,11 +155,6 @@ export default function EditExpense({ isVisible, toggle, currentEdited }) {
             />
             <label htmlFor='recurringcheckbox'>Recurring</label>
           </div>
-          <button className='modal-form-image-upload-button' type='button'>
-            <svg className='modal-form-image-upload-icon'>
-              <use href='/icons/camera-icon.svg#Capa_1'></use>
-            </svg>
-          </button>
           <button disabled={loading} className='modal-form-submit'>
             {loading ? <Spinner width='1rem' height='1rem' /> : success}
           </button>

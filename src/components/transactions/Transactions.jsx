@@ -23,7 +23,9 @@ export default function Transactions() {
     return (
       <tr key={el.id}>
         <td className='expenses-table-name-column'>
-          <img src='/images/apple.png' alt='business' />
+          <svg className='expense-table-name-column-image'>
+            <use href={`/icons/${el.type}.svg#Layer_1`}></use>
+          </svg>
           <div className='expenses-table-name-column-title-container'>
             <p className='expenses-table-name-column-title'>{el.name}</p>
             <p className='expenses-table-name-column-subtitle'>{el.business}</p>
@@ -101,19 +103,19 @@ export default function Transactions() {
           {loading && <Spinner marginTop='2em' />}
 
           <div className='transactions-expenses-table-navigation'>
-            {!loading && currentPage !== 1 && (
+            {expensesRows.length > 0 && !loading && currentPage !== 1 && (
               <button onClick={() => goToPage(currentPage - 1)}>
                 <svg className='transactions-expenses-table-navigation-icon chevron-left'>
                   <use href='/icons/chevron-icon.svg#Layer_1'></use>
                 </svg>
               </button>
             )}
-            {!loading && (
+            {expensesRows.length > 0 && pages > 1 && !loading && (
               <span>
                 Page {currentPage}/{pages}
               </span>
             )}
-            {!loading && currentPage !== pages && (
+            {expensesRows.length > 0 && !loading && currentPage !== pages && (
               <button onClick={() => goToPage(currentPage + 1)}>
                 <svg className='transactions-expenses-table-navigation-icon chevron-right'>
                   <use href='/icons/chevron-icon.svg#Layer_1'></use>

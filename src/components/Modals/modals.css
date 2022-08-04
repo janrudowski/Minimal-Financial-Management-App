@@ -43,7 +43,6 @@
 }
 
 .modal-form-image-upload-button {
-  margin-bottom: auto;
   width: 50px;
   height: 50px;
   padding: 1em;
@@ -84,6 +83,7 @@
   color: var(--text-two);
   border: none;
   cursor: pointer;
+  margin-top: auto;
 }
 
 .modal-hidden {
