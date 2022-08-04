@@ -161,8 +161,9 @@ function init() {
       'Shopping',
       'Software',
       'Subscription',
-      'Mobile',
       'Withdraw',
+      'Travel',
+      'Food',
     ],
   };
 }

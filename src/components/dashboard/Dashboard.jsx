@@ -39,7 +39,9 @@ export default function Dashboard() {
     return (
       <tr key={el.id}>
         <td className='expenses-table-name-column'>
-          <img src='/images/apple.png' alt='business' />
+          <svg className='expense-table-name-column-image'>
+            <use href={`/icons/${el.type}.svg#Layer_1`}></use>
+          </svg>
           <div className='expenses-table-name-column-title-container'>
             <p className='expenses-table-name-column-title'>{el.name}</p>
             <p className='expenses-table-name-column-subtitle'>{el.business}</p>
@@ -159,7 +161,7 @@ export default function Dashboard() {
                   type='monotone'
                   dataKey='amount'
                   stroke='#8884d8'
-                  activeDot={{ r: 8 }}
+                  activeDot={{ r: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>

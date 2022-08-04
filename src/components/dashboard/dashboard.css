@@ -225,3 +225,14 @@
 .chart-container-header option:hover {
   box-shadow: 0 0 10px 100px #1882a8 inset;
 }
+
+.expense-table-name-column-image {
+  width: 40px;
+  height: 40px;
+  background: var(--backgroud-seven);
+  border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
