@@ -48,6 +48,7 @@ export const ACTIONS = {
   SET_DATA: 'set-data', //update state with data from db
   CHANGE_PAGE: 'change-page', //change the current expenses page
   CHANGE_CHART_RANGE: 'change-chart-range',
+  FILTER: 'filter',
 };
 
 function sumCallback(acc, el) {
@@ -108,6 +109,15 @@ function getChartExpenses(expenses, days) {
   });
 }
 
+function getFiltered(expenses, { type, value }) {
+  switch (type) {
+    case 'search':
+      return expenses.filter((el) => {
+        return el.name.toLowerCase().includes(value);
+      });
+  }
+}
+
 function reducer(state, { type, payload }) {
   switch (type) {
     case ACTIONS.SET_DATA:
@@ -116,6 +126,7 @@ function reducer(state, { type, payload }) {
       return {
         ...state,
         expenses: expenses,
+        displayedExpenses: expenses,
         recentExpenses: expenses.slice(0, 3),
         currentPageExpenses: expenses.slice(0, state.perPage),
         recurringExpenses: getRecurringExpenses(expenses),
@@ -130,7 +141,7 @@ function reducer(state, { type, payload }) {
       return {
         ...state,
         currentPage: page,
-        currentPageExpenses: state.expenses.slice(start, end),
+        currentPageExpenses: state.displayedExpenses.slice(start, end),
       };
     case ACTIONS.CHANGE_CHART_RANGE:
       const { days } = payload;
@@ -138,6 +149,18 @@ function reducer(state, { type, payload }) {
         ...state,
         chartExpenses: getChartExpenses(state.expenses, days),
         chartDays: days,
+      };
+    case ACTIONS.FILTER:
+      const { filter } = payload;
+      const displayedExpenses = filter
+        ? getFiltered(state.expenses, filter)
+        : state.expenses;
+      return {
+        ...state,
+        displayedExpenses: displayedExpenses,
+        currentPageExpenses: displayedExpenses.slice(0, state.perPage),
+        pages: Math.ceil(displayedExpenses.length / state.perPage),
+        currentPage: 1,
       };
   }
 }
@@ -150,6 +173,7 @@ function init() {
     expenses: [],
     recurringExpenses: [],
     recentExpenses: [],
+    displayedExpenses: [],
     currentPageExpenses: [],
     chartExpenses: [],
     chartDays: 7,
@@ -254,6 +278,10 @@ export function APIContextProvider({ children }) {
     dispatch({ type: ACTIONS.CHANGE_CHART_RANGE, payload: { days: days } });
   }
 
+  function applyFilter(filter) {
+    dispatch({ type: ACTIONS.FILTER, payload: { filter: filter } });
+  }
+
   useEffect(() => {
     setLoading(true);
     getExpenses();
@@ -269,6 +297,7 @@ export function APIContextProvider({ children }) {
         editExpense,
         goToPage,
         changeChart,
+        applyFilter,
       }}
     >
       {children}
