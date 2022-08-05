@@ -8,8 +8,14 @@ import EditExpense from '../Modals/EditExpense';
 import './transactions.css';
 
 export default function Transactions() {
-  const { currentPageExpenses, currentPage, pages, loading, goToPage } =
-    useAPI();
+  const {
+    currentPageExpenses,
+    currentPage,
+    pages,
+    loading,
+    goToPage,
+    applyFilter,
+  } = useAPI();
   const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
   const [currentEdited, setCurrentEdited] = useState(null);
   const [editExpenseVisible, setEditExpenseVisible] = useState(false);
@@ -18,6 +24,12 @@ export default function Transactions() {
     setEditExpenseVisible(true);
     setCurrentEdited(el);
   }
+
+  function handleSearch(event) {
+    applyFilter({ type: 'search', value: event.target.value });
+  }
+
+  //todo: fix a bug when adding expense the search query remains the same (maybe add search query to reducer)
 
   const expensesRows = currentPageExpenses.map((el) => {
     return (
@@ -67,7 +79,11 @@ export default function Transactions() {
             <svg className='transactions-search-icon'>
               <use href='/icons/search-icon.svg#Capa_1'></use>
             </svg>
-            <input type='text' placeholder='Search anything on Transactions' />
+            <input
+              type='text'
+              placeholder='Search anything on Transactions'
+              onChange={handleSearch}
+            />
           </div>
           <button
             className='transactions-create-expense-button'
