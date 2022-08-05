@@ -140,7 +140,7 @@
 .transactions-expenses-table-navigation-icon {
   width: 1rem;
   height: 1rem;
-  fill: var(--text-one);
+  fill: black;
 }
 
 .chevron-left {
