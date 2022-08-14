@@ -5,7 +5,7 @@ import CustomSelect from '../CustomSelect/CustomSelect';
 import Spinner from '../Spinner/Spinner';
 import './modals.css';
 
-export default function CreateExpense({ isVisible, toggle }) {
+export default function CreateExpense({ isVisible, toggle, clearSearch }) {
   const { addExpense, expenseTypes } = useAPI();
 
   const [loading, setLoading] = useState(false);
@@ -63,6 +63,7 @@ export default function CreateExpense({ isVisible, toggle }) {
     const { title, business, amount, date, recurring } = formData;
     try {
       setLoading(true);
+      clearSearch('');
       await addExpense(
         title,
         business,
@@ -74,6 +75,7 @@ export default function CreateExpense({ isVisible, toggle }) {
     } catch (err) {
       console.log(err); //handle errors here
     }
+
     setLoading(false);
     setSuccess('✔');
     setTimeout(() => {

@@ -15,10 +15,18 @@ export default function Transactions() {
     loading,
     goToPage,
     applyFilter,
+    resetDisplayed,
   } = useAPI();
   const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
   const [currentEdited, setCurrentEdited] = useState(null);
   const [editExpenseVisible, setEditExpenseVisible] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
+
+  useEffect(() => {
+    return () => {
+      resetDisplayed();
+    };
+  }, []);
 
   function handleEdit(el) {
     setEditExpenseVisible(true);
@@ -26,7 +34,9 @@ export default function Transactions() {
   }
 
   function handleSearch(event) {
-    applyFilter({ type: 'search', value: event.target.value });
+    const { value } = event.target;
+    setSearchInput(value);
+    applyFilter({ type: 'search', value: value });
   }
 
   //todo: fix a bug when adding expense the search query remains the same (maybe add search query to reducer)
@@ -44,7 +54,9 @@ export default function Transactions() {
           </div>
         </td>
         <td>{el.type}</td>
-        <td className='expenses-table-amount-column'>${el.amount}</td>
+        <td className='expenses-table-amount-column'>
+          ${el.amount.toFixed(2)}
+        </td>
         <td>{formatDate(el.date.seconds)}</td>
         <td>{el.invoiceid}</td>
         <td>
@@ -64,12 +76,14 @@ export default function Transactions() {
       <CreateExpense
         isVisible={createExpenseVisible}
         toggle={setCreateExpenseVisible}
+        clearSearch={setSearchInput}
       />
       {editExpenseVisible && (
         <EditExpense
           isVisible={editExpenseVisible}
           toggle={setEditExpenseVisible}
           currentEdited={currentEdited}
+          clearSearch={setSearchInput}
         />
       )}
       <div className='transactions-container'>
@@ -83,6 +97,7 @@ export default function Transactions() {
               type='text'
               placeholder='Search anything on Transactions'
               onChange={handleSearch}
+              value={searchInput}
             />
           </div>
           <button

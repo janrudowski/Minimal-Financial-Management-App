@@ -49,6 +49,7 @@ export const ACTIONS = {
   CHANGE_PAGE: 'change-page', //change the current expenses page
   CHANGE_CHART_RANGE: 'change-chart-range',
   FILTER: 'filter',
+  RESET: 'reset',
 };
 
 function sumCallback(acc, el) {
@@ -161,6 +162,14 @@ function reducer(state, { type, payload }) {
         currentPageExpenses: displayedExpenses.slice(0, state.perPage),
         pages: Math.ceil(displayedExpenses.length / state.perPage),
         currentPage: 1,
+      };
+    case ACTIONS.RESET:
+      return {
+        ...state,
+        displayedExpenses: state.expenses,
+        currentPage: 1,
+        pages: Math.ceil(state.expenses.length / state.perPage),
+        currentPageExpenses: state.expenses.slice(0, state.perPage),
       };
   }
 }
@@ -282,6 +291,10 @@ export function APIContextProvider({ children }) {
     dispatch({ type: ACTIONS.FILTER, payload: { filter: filter } });
   }
 
+  function resetDisplayed() {
+    dispatch({ type: ACTIONS.RESET });
+  }
+
   useEffect(() => {
     setLoading(true);
     getExpenses();
@@ -298,6 +311,7 @@ export function APIContextProvider({ children }) {
         goToPage,
         changeChart,
         applyFilter,
+        resetDisplayed,
       }}
     >
       {children}
