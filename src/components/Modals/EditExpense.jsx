@@ -5,7 +5,12 @@ import { useCustomSelect } from '../CustomSelect/CustomSelect';
 import CustomSelect from '../CustomSelect/CustomSelect';
 import './modals.css';
 
-export default function EditExpense({ isVisible, toggle, currentEdited }) {
+export default function EditExpense({
+  isVisible,
+  toggle,
+  currentEdited,
+  clearSearch,
+}) {
   const { editExpense, expenseTypes } = useAPI();
 
   const [loading, setLoading] = useState(false);
@@ -72,6 +77,7 @@ export default function EditExpense({ isVisible, toggle, currentEdited }) {
     if (!isCorrect) return;
     try {
       setLoading(true);
+      clearSearch('');
       await editExpense(currentEdited.id, {
         ...formData,
         type: selected,
@@ -80,6 +86,7 @@ export default function EditExpense({ isVisible, toggle, currentEdited }) {
     } catch (err) {
       console.log(err); //handle errors here
     }
+
     setLoading(false);
     setSuccess('✔');
     setTimeout(() => {

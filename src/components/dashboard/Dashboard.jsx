@@ -48,7 +48,9 @@ export default function Dashboard() {
           </div>
         </td>
         <td>{el.type}</td>
-        <td className='expenses-table-amount-column'>${el.amount}</td>
+        <td className='expenses-table-amount-column'>
+          ${el.amount.toFixed(2)}
+        </td>
         <td>{formatDate(el.date.seconds)}</td>
       </tr>
     );
@@ -64,7 +66,9 @@ export default function Dashboard() {
           <p className='expenses-table-name-column-title'>{el.name}</p>
           <p className='expenses-table-name-column-subtitle'>{el.business}</p>
         </div>
-        <div className='expenses-table-amount-column'>${el.amount}</div>
+        <div className='expenses-table-amount-column'>
+          ${el.amount.toFixed(2)}
+        </div>
       </div>
     );
   });
