@@ -127,6 +127,7 @@ export default function CreateExpense({
           />
           <h6 className='modal-form-error-message'>{error.amount}</h6>
           <CustomSelect
+            label='Expense type'
             selected={selected}
             setSelected={setSelected}
             items={expenseTypes}

@@ -1,32 +1,62 @@
-.custom-select-menu {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5em 1em;
-  cursor: pointer;
-}
-
-.custom-select-items-item {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 0 1em 0 1.2em;
-  cursor: pointer;
-}
-.custom-select-items-item:hover {
-  background: #dcdfe4;
-}
-
-.custom-select-items {
-  position: absolute;
-  z-index: 999;
+.custom-select {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: height 200ms ease-in-out;
+  max-width: 100%;
+}
+
+.custom-select-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: inherit;
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.custom-select-control {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.75rem 2.75rem 0.75rem 1rem;
+  appearance: none;
+  color-scheme: var(--color-scheme);
+  cursor: pointer;
+  line-height: 1.3;
+  outline: none;
+}
+
+.custom-select-input:focus-visible {
+  border-color: var(--text-one) !important;
+  box-shadow: 0 0 0 3px rgba(200, 238, 68, 0.28);
+}
+
+.custom-select-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.custom-select-chevron {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  width: 0;
   height: 0;
-  border: none;
-  overflow: hidden;
-  flex-grow: 1;
+  border-right: 0.32rem solid transparent;
+  border-left: 0.32rem solid transparent;
+  border-top: 0.38rem solid currentColor;
+  pointer-events: none;
+  transform: translateY(-35%);
+}
+
+@media (max-width: 480px) {
+  .custom-select {
+    min-width: 0 !important;
+  }
+
+  .custom-select-input {
+    font-size: 16px !important;
+  }
 }
