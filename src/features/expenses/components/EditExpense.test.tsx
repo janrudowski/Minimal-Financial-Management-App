@@ -1,6 +1,6 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Expense } from '../types';
 import EditExpense from './EditExpense';
 
@@ -43,10 +43,27 @@ function setup(expense: Expense = currentEdited) {
   return { toggle, clearSearch };
 }
 
+function createDeferred<T>() {
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((_resolve, promiseReject) => {
+    reject = promiseReject;
+  });
+
+  return {
+    promise,
+    reject,
+  };
+}
+
 describe('EditExpense', () => {
   beforeEach(() => {
     mockApi.editExpense.mockReset();
     mockApi.editExpense.mockResolvedValue(undefined);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('shows validation messages and does not submit when required fields are empty', async () => {
@@ -66,6 +83,24 @@ describe('EditExpense', () => {
     expect(screen.getByText('title cannot be empty.')).toBeInTheDocument();
     expect(screen.getByText('amount cannot be empty.')).toBeInTheDocument();
     expect(screen.getByText('date cannot be empty.')).toBeInTheDocument();
+    expect(mockApi.editExpense).not.toHaveBeenCalled();
+    expect(clearSearch).not.toHaveBeenCalled();
+  });
+
+  it('shows the numeric amount validation message when amount is not a number', async () => {
+    const user = userEvent.setup();
+    const { clearSearch } = setup();
+    const dateInput = document.querySelector<HTMLInputElement>(
+      'input[name="date"]'
+    );
+
+    expect(dateInput).not.toBeNull();
+
+    await user.clear(screen.getByPlaceholderText('Amount'));
+    await user.type(screen.getByPlaceholderText('Amount'), 'one hundred');
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(screen.getByText('amount must be a number.')).toBeInTheDocument();
     expect(mockApi.editExpense).not.toHaveBeenCalled();
     expect(clearSearch).not.toHaveBeenCalled();
   });
@@ -111,5 +146,58 @@ describe('EditExpense', () => {
       });
     });
     expect(clearSearch).toHaveBeenCalledWith('');
+  });
+
+  it('keeps the modal open and preserves form data when editing fails', async () => {
+    vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const deferredEdit = createDeferred<void>();
+    mockApi.editExpense.mockReturnValueOnce(deferredEdit.promise);
+    const user = userEvent.setup();
+    const { toggle } = setup();
+    const dateInput = document.querySelector<HTMLInputElement>(
+      'input[name="date"]'
+    );
+
+    expect(dateInput).not.toBeNull();
+
+    await user.clear(screen.getByPlaceholderText('Title'));
+    await user.type(screen.getByPlaceholderText('Title'), 'Rejected hotel');
+    await user.clear(screen.getByPlaceholderText('Business (optional)'));
+    await user.type(
+      screen.getByPlaceholderText('Business (optional)'),
+      'Airport Hotel'
+    );
+    await user.clear(screen.getByPlaceholderText('Amount'));
+    await user.type(screen.getByPlaceholderText('Amount'), '175');
+    fireEvent.change(dateInput as HTMLInputElement, {
+      target: { value: '2026-05-22' },
+    });
+    await user.click(screen.getByLabelText('Recurring'));
+    await user.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(mockApi.editExpense).toHaveBeenCalledTimes(1);
+
+    vi.useFakeTimers();
+
+    await act(async () => {
+      deferredEdit.reject(new Error('Network failed'));
+      await deferredEdit.promise.catch(() => undefined);
+    });
+
+    expect(screen.queryByRole('button', { name: '✔' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled();
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+
+    expect(toggle).not.toHaveBeenCalled();
+    expect(screen.getByPlaceholderText('Title')).toHaveValue('Rejected hotel');
+    expect(screen.getByPlaceholderText('Business (optional)')).toHaveValue(
+      'Airport Hotel'
+    );
+    expect(screen.getByPlaceholderText('Amount')).toHaveValue('175');
+    expect(dateInput as HTMLInputElement).toHaveValue('2026-05-22');
+    expect(screen.getByLabelText('Recurring')).toBeChecked();
   });
 });
