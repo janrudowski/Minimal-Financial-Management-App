@@ -32,7 +32,6 @@ export default function CreateExpense({
     onSuccessClose: () => toggle(false),
     onSubmit: async (formData, selected) => {
       const { title, business, amount, date, recurring } = formData;
-      clearSearch('');
       await addExpense(
         title,
         business,
@@ -41,6 +40,7 @@ export default function CreateExpense({
         date,
         recurring
       );
+      clearSearch('');
     },
   });
 

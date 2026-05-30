@@ -19,6 +19,7 @@ type ExpenseFormModalProps<T extends string> = {
   selected: T;
   setSelected: (item: T) => void;
   loading: boolean;
+  submitDisabled: boolean;
   submitLabel: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   onSubmit: FormEventHandler<HTMLFormElement>;
@@ -42,6 +43,7 @@ export default function ExpenseFormModal<T extends string>({
   selected,
   setSelected,
   loading,
+  submitDisabled,
   submitLabel,
   onChange,
   onSubmit,
@@ -49,13 +51,19 @@ export default function ExpenseFormModal<T extends string>({
   return (
     <div className={`modal ${!isVisible ? 'modal-hidden' : ''}`}>
       <div className='modal-window'>
-        <div className='modal-close' onClick={onClose}>
+        <button
+          aria-label='Close expense form'
+          className='modal-close'
+          onClick={onClose}
+          type='button'
+        >
           X
-        </div>
+        </button>
         <form onSubmit={onSubmit} className='modal-form'>
           <input
             className={`${error.title ? 'modal-form-invalid-input' : ''}`}
             onChange={onChange}
+            aria-label='Title'
             type='text'
             placeholder='Title'
             name='title'
@@ -65,6 +73,7 @@ export default function ExpenseFormModal<T extends string>({
           <input
             className={`${error.business ? 'modal-form-invalid-input' : ''}`}
             onChange={onChange}
+            aria-label='Business'
             type='text'
             placeholder='Business (optional)'
             name='business'
@@ -74,6 +83,7 @@ export default function ExpenseFormModal<T extends string>({
           <input
             className={`${error.amount ? 'modal-form-invalid-input' : ''}`}
             onChange={onChange}
+            aria-label='Amount'
             type='text'
             placeholder='Amount'
             name='amount'
@@ -90,6 +100,7 @@ export default function ExpenseFormModal<T extends string>({
           <div className='modal-form-row'>
             <input
               onChange={onChange}
+              aria-label='Date'
               className={`modal-form-input-date ${
                 error.date ? 'modal-form-invalid-input' : ''
               }`}
@@ -107,7 +118,11 @@ export default function ExpenseFormModal<T extends string>({
             <label htmlFor='recurringcheckbox'>Recurring</label>
           </div>
           <h6 className='modal-form-error-message'>{error.date}</h6>
-          <button disabled={loading} className='modal-form-submit'>
+          <button
+            disabled={submitDisabled}
+            className='modal-form-submit'
+            type='submit'
+          >
             {loading ? <Spinner width='1rem' height='1rem' /> : submitLabel}
           </button>
         </form>

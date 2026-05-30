@@ -43,13 +43,13 @@ export default function EditExpense({
     submitLabel: 'Save',
     onSuccessClose: () => toggle(false),
     onSubmit: async (formData, selected) => {
-      clearSearch('');
       const editedExpense: EditExpenseInput = {
         ...formData,
         type: selected,
         amount: Number(formData.amount),
       };
       await editExpense(currentEdited.id, editedExpense);
+      clearSearch('');
     },
   });
 

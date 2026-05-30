@@ -29,6 +29,7 @@ export function useExpenseForm<T extends string>({
   onSuccessClose,
 }: UseExpenseFormParams<T>) {
   const [loading, setLoading] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(false);
   const [selected, setSelected] = useCustomSelect(expenseTypes, initialSelected);
   const [formData, setFormData] = useState({ ...initialValues });
   const [error, setError] = useState<ExpenseFormErrors>(
@@ -55,10 +56,11 @@ export function useExpenseForm<T extends string>({
 
     try {
       setLoading(true);
+      setSubmitDisabled(true);
       await onSubmit(formData, selected);
-    } catch (err) {
-      console.log(err); //handle errors here
+    } catch {
       setLoading(false);
+      setSubmitDisabled(false);
       return;
     }
 
@@ -67,6 +69,7 @@ export function useExpenseForm<T extends string>({
     setTimeout(() => {
       setCurrentSubmitLabel(submitLabel);
       setFormData({ ...initialValues });
+      setSubmitDisabled(false);
       onSuccessClose();
     }, 1000);
   }
@@ -79,6 +82,7 @@ export function useExpenseForm<T extends string>({
     onSubmit: handleSubmit,
     selected,
     setSelected,
+    submitDisabled,
     submitLabel: currentSubmitLabel,
   };
 }

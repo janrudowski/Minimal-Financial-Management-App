@@ -149,11 +149,13 @@ describe('EditExpense', () => {
   });
 
   it('keeps the modal open and preserves form data when editing fails', async () => {
-    vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    const consoleLogSpy = vi
+      .spyOn(console, 'log')
+      .mockImplementation(() => undefined);
     const deferredEdit = createDeferred<void>();
     mockApi.editExpense.mockReturnValueOnce(deferredEdit.promise);
     const user = userEvent.setup();
-    const { toggle } = setup();
+    const { clearSearch, toggle } = setup();
     const dateInput = document.querySelector<HTMLInputElement>(
       'input[name="date"]'
     );
@@ -184,6 +186,8 @@ describe('EditExpense', () => {
       await deferredEdit.promise.catch(() => undefined);
     });
 
+    expect(clearSearch).not.toHaveBeenCalled();
+    expect(consoleLogSpy).not.toHaveBeenCalled();
     expect(screen.queryByRole('button', { name: '✔' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled();
 
