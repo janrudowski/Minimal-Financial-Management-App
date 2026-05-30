@@ -1,5 +1,6 @@
 import { type Dispatch, type SetStateAction } from 'react';
 import { useAPI } from '../context/ExpensesContext';
+import { formatExpenseInputDate } from '../model/expenseDate';
 import type { EditExpenseInput, Expense } from '../types';
 import ExpenseFormModal from './ExpenseFormModal';
 import type { ExpenseFormValues } from './expenseFormValidation';
@@ -20,19 +21,11 @@ export default function EditExpense({
 }: EditExpenseProps) {
   const { editExpense, expenseTypes } = useAPI();
 
-  function formatDate(seconds: number) {
-    const date = new Date(seconds * 1000);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
   const initialFormData: ExpenseFormValues = {
     title: currentEdited.name,
     business: currentEdited.business,
     amount: currentEdited.amount,
-    date: formatDate(currentEdited.date.seconds),
+    date: formatExpenseInputDate(currentEdited.date),
     recurring: currentEdited.recurring,
   };
 

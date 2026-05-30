@@ -1,4 +1,5 @@
 import type { Expense, ExpenseFilter, FirestoreTimestampLike } from '../types';
+import { toExpenseDate } from './expenseDate';
 
 export type SpendingSummary = {
   totalSpending: string;
@@ -7,11 +8,7 @@ export type SpendingSummary = {
 };
 
 function toDate(timestamp: FirestoreTimestampLike): Date {
-  if (timestamp.toDate) {
-    return timestamp.toDate();
-  }
-
-  return new Date(timestamp.seconds * 1000);
+  return toExpenseDate(timestamp);
 }
 
 function sumAmounts(total: number, expense: Expense): number {

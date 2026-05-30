@@ -9,4 +9,10 @@ describe('formatDate', () => {
 
     expect(formatDate(seconds, 'en-US')).toBe('Aug 1, 2022');
   });
+
+  it('formats Date values with an explicit locale', () => {
+    expect(formatDate(new Date('2022-08-01T12:00:00.000Z'), 'en-US')).toBe(
+      'Aug 1, 2022'
+    );
+  });
 });

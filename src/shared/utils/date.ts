@@ -1,8 +1,8 @@
 export function formatDate(
-  seconds: number,
+  value: number | Date,
   locale = navigator.language
 ): string {
-  const date = new Date(seconds * 1000);
+  const date = value instanceof Date ? value : new Date(value * 1000);
   const options: Intl.DateTimeFormatOptions = {
     day: 'numeric',
     month: 'short',

@@ -1,4 +1,4 @@
-import { formatDate } from '../../../shared/utils/date';
+import { formatExpenseDisplayDate } from '../model/expenseDate';
 import type { Expense } from '../types';
 
 type TransactionsTableProps = {
@@ -45,7 +45,7 @@ export default function TransactionsTable({
             <td className='expenses-table-amount-column'>
               ${expense.amount.toFixed(2)}
             </td>
-            <td>{formatDate(expense.date.seconds)}</td>
+            <td>{formatExpenseDisplayDate(expense.date)}</td>
             <td>{expense.invoiceid}</td>
             <td>
               <button
