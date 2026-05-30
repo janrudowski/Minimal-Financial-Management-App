@@ -106,6 +106,14 @@ describe('Transactions', () => {
     );
   });
 
+  it('does not render unavailable filter controls', () => {
+    render(<Transactions />);
+
+    expect(
+      screen.queryByRole('button', { name: 'Filters' })
+    ).not.toBeInTheDocument();
+  });
+
   it('exposes named pagination controls', async () => {
     const user = userEvent.setup();
     mockApi.currentPage = 2;

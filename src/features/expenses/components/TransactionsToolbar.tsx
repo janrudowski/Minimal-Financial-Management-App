@@ -41,18 +41,6 @@ export default function TransactionsToolbar({
         </svg>
         Create Expense
       </button>
-      <button
-        className='transactions-filters-button'
-        type='button'
-      >
-        <svg
-          aria-hidden='true'
-          className='transactions-icon'
-        >
-          <use href='/icons/filter-icon.svg#Layer_1'></use>
-        </svg>
-        Filters
-      </button>
     </div>
   );
 }

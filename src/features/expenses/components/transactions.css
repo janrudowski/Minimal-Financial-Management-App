@@ -59,20 +59,6 @@
 .transactions-create-expense-button .transactions-icon {
   fill: #1b212d;
 }
-.transactions-filters-button {
-  font-size: 0.9rem;
-  border: 1px solid var(--border-one);
-  border-radius: 10px;
-  background: none;
-  display: flex;
-  align-items: center;
-  padding: 0.5em;
-  margin-right: 2em;
-  font-weight: 500;
-  color: var(--text-one);
-  cursor: pointer;
-}
-
 .transactions-expenses-table-container {
   margin-top: 2em;
   padding: 2em 0;
