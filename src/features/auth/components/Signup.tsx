@@ -2,6 +2,8 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
 import { useAuth } from '../context/AuthContext';
+import { getSignupErrorMessage } from '../utils/authErrors';
+import AuthFormError from './AuthFormError';
 
 type SignupFormData = {
   fullName: string;
@@ -9,13 +11,7 @@ type SignupFormData = {
   password: string;
 };
 
-function getFirebaseErrorCode(error: unknown) {
-  if (typeof error === 'object' && error !== null && 'code' in error) {
-    return String(error.code);
-  }
-
-  return '';
-}
+const signupErrorId = 'signup-error';
 
 export default function Signup() {
   const { signup, updateUser } = useAuth();
@@ -26,6 +22,7 @@ export default function Signup() {
     password: '',
   });
   const [errMsg, setErrMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -35,32 +32,31 @@ export default function Signup() {
         [name]: value,
       };
     });
+
+    if (errMsg) {
+      setErrMsg('');
+    }
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { email, password, fullName } = formData;
+
+    setErrMsg('');
+    setIsSubmitting(true);
+
     try {
       const { user } = await signup(email, password);
       await updateUser(user, { displayName: fullName });
       navigation('/');
     } catch (error) {
-      const errorCode = getFirebaseErrorCode(error);
-
-      setErrMsg(() => {
-        switch (errorCode) {
-          case 'auth/email-already-in-use':
-            return 'Email is already in use. Please use another email';
-
-          default:
-            return errMsg;
-        }
-      });
-      setFormData({
-        fullName: '',
-        email: '',
+      setErrMsg(getSignupErrorMessage(error));
+      setFormData((currentFormData) => ({
+        ...currentFormData,
         password: '',
-      });
+      }));
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -83,6 +79,7 @@ export default function Signup() {
               onChange={handleChange}
               value={formData.fullName}
               required={true}
+              autoComplete='name'
             />
             <label htmlFor='email'>Email</label>
             <input
@@ -93,10 +90,13 @@ export default function Signup() {
               onChange={handleChange}
               value={formData.email}
               required={true}
+              autoComplete='email'
+              aria-invalid={errMsg.length > 0}
+              aria-describedby={errMsg.length > 0 ? signupErrorId : undefined}
             />
             <label htmlFor='password'>Password</label>
             <input
-              autoComplete='on'
+              autoComplete='new-password'
               type='password'
               name='password'
               id='password'
@@ -105,10 +105,18 @@ export default function Signup() {
               value={formData.password}
               required={true}
               minLength={8}
+              aria-invalid={errMsg.length > 0}
+              aria-describedby={errMsg.length > 0 ? signupErrorId : undefined}
             />
-            {errMsg.length > 0 && <p className='invalid'>{errMsg}</p>}
+            <AuthFormError id={signupErrorId} message={errMsg} />
 
-            <button className='signup-btn'>Create Account</button>
+            <button
+              className='signup-btn'
+              disabled={isSubmitting}
+              type='submit'
+            >
+              {isSubmitting ? 'Creating account...' : 'Create Account'}
+            </button>
             <button className='signup-google-btn' type='button'>
               <img
                 className='google-logo'
