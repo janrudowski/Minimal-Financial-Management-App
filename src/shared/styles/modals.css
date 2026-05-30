@@ -75,6 +75,7 @@
 }
 
 .modal-close {
+  border: none;
   margin: 0.5em;
   cursor: pointer;
   width: 1.5rem;
