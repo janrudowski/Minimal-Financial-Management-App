@@ -1,53 +1,57 @@
-import React, { useState } from 'react';
+import {
+  type ChangeEvent,
+  type Dispatch,
+  type FormEvent,
+  type SetStateAction,
+  useState,
+} from 'react';
 import CustomSelect, {
   useCustomSelect,
 } from '../../../shared/components/CustomSelect/CustomSelect';
 import Spinner from '../../../shared/components/Spinner/Spinner';
 import '../../../shared/styles/modals.css';
 import { useAPI } from '../context/ExpensesContext';
+import {
+  createEmptyExpenseFormErrors,
+  type ExpenseFormErrors,
+  type ExpenseFormValues,
+  validateExpenseFormData,
+} from './expenseFormValidation';
 
-export default function EditExpense({
+type CreateExpenseProps = {
+  isVisible: boolean;
+  toggle: Dispatch<SetStateAction<boolean>>;
+  clearSearch: Dispatch<SetStateAction<string>>;
+};
+
+export default function CreateExpense({
   isVisible,
   toggle,
-  currentEdited,
   clearSearch,
-}) {
-  const { editExpense, expenseTypes } = useAPI();
+}: CreateExpenseProps) {
+  const { addExpense, expenseTypes } = useAPI();
 
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useCustomSelect(
-    expenseTypes,
-    currentEdited.type
-  );
 
-  function formatDate(seconds) {
-    const date = new Date(seconds * 1000);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, 0);
-    const day = String(date.getDate()).padStart(2, 0);
-    return `${year}-${month}-${day}`;
-  }
+  const [selected, setSelected] = useCustomSelect(expenseTypes);
 
-  const initialFormData = {
-    title: currentEdited.name,
-    business: currentEdited.business,
-    amount: currentEdited.amount,
-    date: formatDate(currentEdited.date.seconds),
+  const initialFormData: ExpenseFormValues = {
+    title: '',
+    business: '',
+    amount: '',
+    date: '',
     recurring: false,
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });
 
-  const [error, setError] = useState({
-    title: '',
-    business: '',
-    amount: null,
-    date: null,
-  });
+  const [error, setError] = useState<ExpenseFormErrors>(
+    createEmptyExpenseFormErrors
+  );
 
-  const [success, setSuccess] = useState('Save');
+  const [success, setSuccess] = useState('Add');
 
-  function handleChange(event) {
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = event.target;
     setFormData((prev) => {
       return {
@@ -57,33 +61,24 @@ export default function EditExpense({
     });
   }
 
-  async function handleSubmit(event) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    let isCorrect = true;
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'business') return;
-      let message;
-      if (value === '') message = `${key} cannot be empty.`; //TODO: FIX DATE GOES THROUGH EVEN THO ITS EMPTY
-      if (key === 'amount' && isNaN(value))
-        message = `${key} must be a number.`;
-      setError((prev) => {
-        return {
-          ...prev,
-          [key]: message,
-        };
-      });
-      if (message) isCorrect = false;
-    });
+    const { errors, isValid } = validateExpenseFormData(formData);
+    setError(errors);
 
-    if (!isCorrect) return;
+    if (!isValid) return;
+    const { title, business, amount, date, recurring } = formData;
     try {
       setLoading(true);
       clearSearch('');
-      await editExpense(currentEdited.id, {
-        ...formData,
-        type: selected,
-        amount: Number(formData.amount),
-      });
+      await addExpense(
+        title,
+        business,
+        selected,
+        Number(amount),
+        date,
+        recurring
+      );
     } catch (err) {
       console.log(err); //handle errors here
     }
@@ -91,7 +86,7 @@ export default function EditExpense({
     setLoading(false);
     setSuccess('✔');
     setTimeout(() => {
-      setSuccess('Save');
+      setSuccess('Add');
       setFormData({ ...initialFormData });
       toggle(false);
     }, 1000);
@@ -163,6 +158,7 @@ export default function EditExpense({
             />
             <label htmlFor='recurringcheckbox'>Recurring</label>
           </div>
+          <h6 className='modal-form-error-message'>{error.date}</h6>
           <button disabled={loading} className='modal-form-submit'>
             {loading ? <Spinner width='1rem' height='1rem' /> : success}
           </button>

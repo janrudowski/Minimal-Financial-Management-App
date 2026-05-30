@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { type ChangeEvent, useEffect, useState } from 'react';
 import Spinner from '../../../shared/components/Spinner/Spinner';
 import TopBar from '../../../shared/components/TopBar/TopBar';
 import { formatDate } from '../../../shared/utils/date';
 import { useAPI } from '../context/ExpensesContext';
+import type { Expense } from '../types';
 import CreateExpense from './CreateExpense';
 import EditExpense from './EditExpense';
 import './transactions.css';
@@ -18,7 +19,7 @@ export default function Transactions() {
     resetDisplayed,
   } = useAPI();
   const [createExpenseVisible, setCreateExpenseVisible] = useState(false);
-  const [currentEdited, setCurrentEdited] = useState(null);
+  const [currentEdited, setCurrentEdited] = useState<Expense | null>(null);
   const [editExpenseVisible, setEditExpenseVisible] = useState(false);
   const [searchInput, setSearchInput] = useState('');
 
@@ -28,12 +29,12 @@ export default function Transactions() {
     };
   }, []);
 
-  function handleEdit(el) {
+  function handleEdit(el: Expense) {
     setEditExpenseVisible(true);
     setCurrentEdited(el);
   }
 
-  function handleSearch(event) {
+  function handleSearch(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
     setSearchInput(value);
     applyFilter({ type: 'search', value: value });
@@ -78,7 +79,7 @@ export default function Transactions() {
         toggle={setCreateExpenseVisible}
         clearSearch={setSearchInput}
       />
-      {editExpenseVisible && (
+      {editExpenseVisible && currentEdited && (
         <EditExpense
           isVisible={editExpenseVisible}
           toggle={setEditExpenseVisible}

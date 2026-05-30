@@ -1,18 +1,26 @@
 import './spinner.css';
-import React from 'react';
+import type { CSSProperties } from 'react';
+
+type SpinnerProps = {
+  fill?: CSSProperties['fill'];
+  height?: CSSProperties['height'];
+  width?: CSSProperties['width'];
+  marginTop?: CSSProperties['marginTop'];
+};
 
 export default function Spinner({
   fill = 'var(--text-two)',
   height = '3rem',
   width = '3rem',
   marginTop = 0,
-}) {
-  const style = {
-    fill: fill,
-    width: width,
-    height: height,
-    marginTop: marginTop,
+}: SpinnerProps) {
+  const style: CSSProperties = {
+    fill,
+    width,
+    height,
+    marginTop,
   };
+
   return (
     <div className='spinner-container'>
       <svg className='spinner' style={style}>

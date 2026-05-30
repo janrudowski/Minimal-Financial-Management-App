@@ -1,16 +1,48 @@
-import React, { useState, useRef } from 'react';
+import { useRef, useState, type CSSProperties } from 'react';
 import './customselect.css';
 
 //#dcdfe4
 
-export function useCustomSelect(items, init = items[0]) {
-  if (!items.includes(init))
+type CustomSelectStyles = {
+  color?: CSSProperties['color'];
+  minWidth?: CSSProperties['minWidth'];
+  background?: CSSProperties['backgroundColor'];
+  border?: CSSProperties['border'];
+  borderRadius?: CSSProperties['borderRadius'];
+  align?: CSSProperties['textAlign'];
+  font?: CSSProperties['fontFamily'];
+  margin?: CSSProperties['margin'];
+  fontSize?: CSSProperties['fontSize'];
+  menuHeight?: CSSProperties['height'];
+  chevronFill?: CSSProperties['fill'];
+};
+
+type CustomSelectProps<T extends string> = {
+  styles?: CustomSelectStyles;
+  items?: readonly T[];
+  selected: T;
+  setSelected: (item: T) => void;
+};
+
+type ChevronProps = {
+  fill?: CSSProperties['fill'];
+  isOpen?: boolean;
+};
+
+export function useCustomSelect<T extends string>(
+  items: readonly T[],
+  init?: T
+) {
+  const initialValue = init ?? items[0];
+
+  if (initialValue === undefined || !items.includes(initialValue))
     throw new Error('The initial value must belong to the items array');
-  return useState(init);
+
+  return useState<T>(initialValue);
 }
 
-function Chevron({ fill, isOpen = false }) {
-  const style = {
+function Chevron({ fill, isOpen = false }: ChevronProps) {
+  const style: CSSProperties = {
     fill: fill || 'black',
     transform: 'rotate(-90deg)',
     width: '1em',
@@ -38,28 +70,29 @@ function Chevron({ fill, isOpen = false }) {
   );
 }
 
-export default function CustomSelect({
+export default function CustomSelect<T extends string>({
   styles,
   items = [],
   selected,
   setSelected,
-}) {
+}: CustomSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [itemsHeight, setItemsHeight] = useState('0px');
 
-  const selectItemsRef = useRef(null);
+  const selectItemsRef = useRef<HTMLDivElement>(null);
 
   function toggle() {
     setIsOpen((prev) => !prev);
-    setItemsHeight(isOpen ? '0px' : `${selectItemsRef.current.scrollHeight}px`);
+    const nextHeight = selectItemsRef.current?.scrollHeight ?? 0;
+    setItemsHeight(isOpen ? '0px' : `${nextHeight}px`);
   }
 
-  function select(item) {
+  function select(item: T) {
     setSelected(item);
     toggle();
   }
 
-  const customSelectStyle = {
+  const customSelectStyle: CSSProperties = {
     color: styles?.color || 'black',
     minWidth: styles?.minWidth || '200px',
     backgroundColor: styles?.background || 'transparent',
@@ -71,15 +104,15 @@ export default function CustomSelect({
     fontSize: styles?.fontSize || '1em',
   };
 
-  const menuStyle = {
+  const menuStyle: CSSProperties = {
     height: styles?.menuHeight || '40px',
     color: styles?.color || 'black',
   };
 
-  const itemsStyle = {
+  const itemsStyle: CSSProperties = {
     background: styles?.background || 'transparent',
     borderTop: 'none',
-    border: isOpen && (styles?.border || '1px solid #dcdfe4'),
+    border: isOpen ? styles?.border || '1px solid #dcdfe4' : undefined,
     borderRadius: '0 0 5px 5px',
     color: styles?.color || 'black',
   };

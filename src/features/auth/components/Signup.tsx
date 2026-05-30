@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+
+type SignupFormData = {
+  fullName: string;
+  email: string;
+  password: string;
+};
+
+function getFirebaseErrorCode(error: unknown) {
+  if (typeof error === 'object' && error !== null && 'code' in error) {
+    return String(error.code);
+  }
+
+  return '';
+}
+
 export default function Signup() {
   const { signup, updateUser } = useAuth();
   const navigation = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignupFormData>({
     fullName: '',
     email: '',
     password: '',
   });
   const [errMsg, setErrMsg] = useState('');
 
-  function handleChange(e) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setFormData((oldData) => {
       return {
@@ -23,17 +37,18 @@ export default function Signup() {
     });
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { email, password, fullName } = formData;
     try {
       const { user } = await signup(email, password);
-      await updateUser(user, fullName);
-      console.log(user);
+      await updateUser(user, { displayName: fullName });
       navigation('/');
     } catch (error) {
+      const errorCode = getFirebaseErrorCode(error);
+
       setErrMsg(() => {
-        switch (error.code) {
+        switch (errorCode) {
           case 'auth/email-already-in-use':
             return 'Email is already in use. Please use another email';
 

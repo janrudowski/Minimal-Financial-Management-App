@@ -1,19 +1,33 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+
+type LoginFormData = {
+  email: string;
+  password: string;
+  isRemember: boolean;
+};
+
+function getFirebaseErrorCode(error: unknown) {
+  if (typeof error === 'object' && error !== null && 'code' in error) {
+    return String(error.code);
+  }
+
+  return '';
+}
+
 export default function Login() {
   const { login } = useAuth();
   const navigation = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
     isRemember: false,
   });
   const [errMsg, setErrMsg] = useState('');
 
-  function handleChange(e) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
     setFormData((oldData) => {
       return {
@@ -23,15 +37,17 @@ export default function Login() {
     });
   }
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { email, password } = formData;
     try {
       await login(email, password);
       navigation('/');
     } catch (error) {
+      const errorCode = getFirebaseErrorCode(error);
+
       setErrMsg(() => {
-        switch (error.code) {
+        switch (errorCode) {
           case 'auth/user-not-found':
             return 'User not found. Please check your email and password';
 
