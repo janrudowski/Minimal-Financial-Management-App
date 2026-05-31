@@ -66,6 +66,11 @@ describe('CreateExpense', () => {
     const user = userEvent.setup();
     const { toggle } = setup();
 
+    const dialog = screen.getByRole('dialog', { name: 'Add expense' });
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(
+      screen.getByRole('heading', { name: 'Add expense' })
+    ).toBeInTheDocument();
     expect(screen.getByLabelText('Title')).toBeInTheDocument();
     expect(screen.getByLabelText('Business')).toBeInTheDocument();
     expect(screen.getByLabelText('Amount')).toBeInTheDocument();
@@ -75,6 +80,31 @@ describe('CreateExpense', () => {
     await user.click(
       screen.getByRole('button', { name: 'Close expense form' })
     );
+
+    expect(toggle).toHaveBeenCalledWith(false);
+  });
+
+  it('moves focus into the dialog and keeps Tab focus inside it', async () => {
+    const user = userEvent.setup();
+
+    setup();
+
+    expect(screen.getByRole('button', { name: 'Close expense form' }))
+      .toHaveFocus();
+
+    await user.tab();
+    expect(screen.getByLabelText('Title')).toHaveFocus();
+
+    await user.tab({ shift: true });
+    expect(screen.getByRole('button', { name: 'Close expense form' }))
+      .toHaveFocus();
+  });
+
+  it('closes from the Escape key', async () => {
+    const user = userEvent.setup();
+    const { toggle } = setup();
+
+    await user.keyboard('{Escape}');
 
     expect(toggle).toHaveBeenCalledWith(false);
   });
@@ -146,6 +176,8 @@ describe('CreateExpense', () => {
     await user.type(dateInput as HTMLInputElement, '2026-05-30');
     await user.click(screen.getByRole('button', { name: 'Add' }));
 
+    expect(screen.getByRole('button', { name: 'Adding expense' }))
+      .toBeDisabled();
     expect(clearSearch).not.toHaveBeenCalled();
 
     vi.useFakeTimers();

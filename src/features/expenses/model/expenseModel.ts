@@ -77,14 +77,23 @@ export function getFilteredExpenses(
     return expenses;
   }
 
-  switch (filter.type) {
-    case 'search': {
-      const searchValue = filter.value.toLowerCase();
-      return expenses.filter((expense) =>
-        expense.name.toLowerCase().includes(searchValue)
-      );
-    }
+  let filteredExpenses = expenses;
+
+  if (filter.recurringOnly) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => expense.recurring === true
+    );
   }
+
+  const searchValue = filter.search?.trim().toLowerCase();
+
+  if (searchValue) {
+    filteredExpenses = filteredExpenses.filter((expense) =>
+      expense.name.toLowerCase().includes(searchValue)
+    );
+  }
+
+  return filteredExpenses;
 }
 
 export function getCurrentPageExpenses(

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Expense } from '../types';
 import Transactions from './Transactions';
@@ -16,6 +17,15 @@ const mockApi = vi.hoisted(() => ({
 
 vi.mock('../context/ExpensesContext', () => ({
   useAPI: () => mockApi,
+}));
+
+vi.mock('../../auth/context/AuthContext', () => ({
+  useAuth: () => ({
+    currentUser: {
+      displayName: 'Avery Stone',
+      photoURL: 'https://example.com/avatar.png',
+    },
+  }),
 }));
 
 vi.mock('../../../shared/components/TopBar/TopBar', () => ({
@@ -58,6 +68,14 @@ function expense(overrides: Partial<Expense> = {}): Expense {
   };
 }
 
+function renderTransactions(initialEntries = ['/transactions']) {
+  return render(
+    <MemoryRouter initialEntries={initialEntries}>
+      <Transactions />
+    </MemoryRouter>
+  );
+}
+
 describe('Transactions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -69,7 +87,7 @@ describe('Transactions', () => {
 
   it('filters by an accessible search field and resets displayed expenses on unmount', async () => {
     const user = userEvent.setup();
-    const { unmount } = render(<Transactions />);
+    const { unmount } = renderTransactions();
 
     await user.type(
       screen.getByRole('searchbox', { name: 'Search expenses' }),
@@ -77,8 +95,7 @@ describe('Transactions', () => {
     );
 
     expect(mockApi.applyFilter).toHaveBeenLastCalledWith({
-      type: 'search',
-      value: 'coffee',
+      search: 'coffee',
     });
 
     unmount();
@@ -93,12 +110,17 @@ describe('Transactions', () => {
       expense({ id: 'rent', name: 'Rent' }),
     ];
 
-    render(<Transactions />);
+    renderTransactions();
 
     await user.click(screen.getByRole('button', { name: 'Create Expense' }));
     expect(screen.getByRole('dialog')).toHaveTextContent(
       'Create expense dialog'
     );
+
+    expect(
+      screen.getByRole('button', { name: 'Edit Coffee beans' })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Edit Rent' })).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Edit Coffee beans' }));
     expect(screen.getByRole('dialog')).toHaveTextContent(
@@ -107,7 +129,7 @@ describe('Transactions', () => {
   });
 
   it('does not render unavailable filter controls', () => {
-    render(<Transactions />);
+    renderTransactions();
 
     expect(
       screen.queryByRole('button', { name: 'Filters' })
@@ -119,12 +141,66 @@ describe('Transactions', () => {
     mockApi.currentPage = 2;
     mockApi.pages = 3;
 
-    render(<Transactions />);
+    renderTransactions();
 
     await user.click(screen.getByRole('button', { name: 'Previous page' }));
     expect(mockApi.goToPage).toHaveBeenCalledWith(1);
 
     await user.click(screen.getByRole('button', { name: 'Next page' }));
     expect(mockApi.goToPage).toHaveBeenCalledWith(3);
+  });
+
+  it('exposes disabled pagination states at page boundaries', async () => {
+    const user = userEvent.setup();
+    mockApi.currentPage = 1;
+    mockApi.pages = 3;
+
+    const { unmount } = renderTransactions();
+
+    const previousPageButton = screen.getByRole('button', {
+      name: 'Previous page',
+    });
+    const nextPageButton = screen.getByRole('button', { name: 'Next page' });
+
+    expect(previousPageButton).toBeDisabled();
+    expect(nextPageButton).toBeEnabled();
+
+    await user.click(previousPageButton);
+    expect(mockApi.goToPage).not.toHaveBeenCalled();
+
+    unmount();
+    vi.clearAllMocks();
+    mockApi.currentPage = 3;
+
+    renderTransactions();
+
+    expect(screen.getByRole('button', { name: 'Previous page' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Next page' })).toBeDisabled();
+  });
+
+  it('applies a recurring-only filter from the transactions URL', () => {
+    renderTransactions(['/transactions?recurring=true']);
+
+    expect(mockApi.applyFilter).toHaveBeenCalledWith({ recurringOnly: true });
+    expect(
+      screen.getByRole('checkbox', { name: 'Recurring only' })
+    ).toBeChecked();
+  });
+
+  it('combines recurring-only and search filters', async () => {
+    const user = userEvent.setup();
+
+    renderTransactions(['/transactions?recurring=true']);
+    vi.clearAllMocks();
+
+    await user.type(
+      screen.getByRole('searchbox', { name: 'Search expenses' }),
+      'cloud'
+    );
+
+    expect(mockApi.applyFilter).toHaveBeenLastCalledWith({
+      recurringOnly: true,
+      search: 'cloud',
+    });
   });
 });

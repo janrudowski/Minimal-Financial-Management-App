@@ -29,8 +29,8 @@ export type Expense = {
 };
 
 export type ExpenseFilter = {
-  type: 'search';
-  value: string;
+  recurringOnly?: boolean;
+  search?: string;
 };
 
 export type NewExpenseInput = {

@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
+import { useDarkMode } from '../providers/DarkModeProvider';
 import { useAuth } from '../../features/auth/context/AuthContext';
+import DarkModeSwitch from '../../shared/components/DarkModeSwitch/DarkModeSwitch';
 import Navbar from '../../shared/components/Navbar/Navbar';
 
 type ProtectedRouteProps = {
@@ -12,15 +14,25 @@ export function ProtectedRoute({
   children,
   loginPage = false,
 }: ProtectedRouteProps) {
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
+  const { darkMode, setDarkMode } = useDarkMode();
 
   if (loginPage) {
     return currentUser ? <Navigate to="/" /> : children;
   }
 
+  function toggleDarkMode() {
+    setDarkMode((previousDarkMode) => !previousDarkMode);
+  }
+
   return currentUser ? (
     <>
-      <Navbar />
+      <Navbar
+        darkModeSwitch={
+          <DarkModeSwitch checked={darkMode} onToggle={toggleDarkMode} />
+        }
+        onLogout={logout}
+      />
       {children}
     </>
   ) : (

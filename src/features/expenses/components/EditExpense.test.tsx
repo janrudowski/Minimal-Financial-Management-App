@@ -111,6 +111,17 @@ describe('EditExpense', () => {
     expect(screen.getByLabelText('Recurring')).toBeChecked();
   });
 
+  it('renders as a labelled edit expense dialog', () => {
+    setup();
+
+    const dialog = screen.getByRole('dialog', { name: 'Edit expense' });
+
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(
+      screen.getByRole('heading', { name: 'Edit expense' })
+    ).toBeInTheDocument();
+  });
+
   it('submits edited expense data with a numeric amount and clears search', async () => {
     const user = userEvent.setup();
     const { clearSearch } = setup();

@@ -5,7 +5,6 @@ import { useAuth } from '../../auth/context/AuthContext';
 import TopBar from '../../../shared/components/TopBar/TopBar';
 import SettingsForm from './SettingsForm';
 import { useSettingsForm } from './useSettingsForm';
-import './settings.css';
 
 export default function Settings() {
   const auth = useAuth();
@@ -47,9 +46,9 @@ function SettingsContent({
   });
 
   return (
-    <main>
-      <div className='settings-container'>
-        <TopBar title='Settings' />
+    <main className='min-h-[calc(100vh-4rem)] flex-1 overflow-x-hidden bg-app-bg transition-colors lg:min-h-screen dark:bg-app-dark-bg'>
+      <div className='mx-auto w-full max-w-[1500px] px-4 py-6 sm:px-6 lg:py-8'>
+        <TopBar title='Settings' profile={currentUser} />
         <SettingsForm
           errors={settingsForm.errors}
           isEditing={settingsForm.isEditing}

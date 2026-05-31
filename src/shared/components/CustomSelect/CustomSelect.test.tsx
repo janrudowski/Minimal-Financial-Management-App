@@ -73,6 +73,25 @@ describe('CustomSelect', () => {
     expect(select).toHaveFocus();
   });
 
+  it('applies Tailwind class props to its label and native select', () => {
+    render(
+      <CustomSelect
+        label='Expense type'
+        items={categories}
+        selected='Food'
+        setSelected={vi.fn()}
+        labelClassName='text-app-subtle'
+        selectClassName='rounded-md border-app-border'
+      />
+    );
+
+    expect(screen.getByText('Expense type')).toHaveClass('text-app-subtle');
+    expect(screen.getByRole('combobox', { name: 'Expense type' })).toHaveClass(
+      'rounded-md',
+      'border-app-border'
+    );
+  });
+
   it('disables the select when no items are available', () => {
     render(
       <CustomSelect label='Expense type' items={[]} selected='' setSelected={vi.fn()} />

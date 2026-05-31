@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Login.css';
+import { cn } from '../../../shared/utils/cn';
 import { useAuth } from '../context/AuthContext';
 import { getLoginErrorMessage } from '../utils/authErrors';
 import AuthFormError from './AuthFormError';
@@ -11,10 +11,17 @@ type LoginFormData = {
   isRemember: boolean;
 };
 
+type AuthAction = 'email' | 'google' | null;
+
 const loginErrorId = 'login-error';
+const inputClassName =
+  'h-[38px] rounded-[10px] border border-[#282541] bg-transparent px-2.5 py-2.5 text-app-text outline-none transition focus:border-app-accent focus:ring-2 focus:ring-app-accent/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-app-accent dark:border-app-dark-border dark:text-slate-50';
+const labelClassName = 'text-sm font-bold';
+const secondaryButtonClassName =
+  'flex h-12 items-center justify-center gap-2.5 rounded-[10px] border border-app-border bg-transparent font-semibold text-app-subtle transition hover:border-app-text hover:text-app-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-app-accent dark:border-app-dark-border dark:text-slate-300 dark:hover:border-slate-200 dark:hover:text-slate-50';
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, signInWithGoogle } = useAuth();
   const navigation = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
@@ -22,7 +29,10 @@ export default function Login() {
     isRemember: false,
   });
   const [errMsg, setErrMsg] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authAction, setAuthAction] = useState<AuthAction>(null);
+  const isSubmitting = authAction !== null;
+  const isEmailSubmitting = authAction === 'email';
+  const isGoogleSubmitting = authAction === 'google';
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
@@ -43,7 +53,7 @@ export default function Login() {
     const { email, password } = formData;
 
     setErrMsg('');
-    setIsSubmitting(true);
+    setAuthAction('email');
 
     try {
       await login(email, password);
@@ -55,22 +65,41 @@ export default function Login() {
         password: '',
       }));
     } finally {
-      setIsSubmitting(false);
+      setAuthAction(null);
+    }
+  }
+
+  async function handleGoogleSignIn() {
+    setErrMsg('');
+    setAuthAction('google');
+
+    try {
+      await signInWithGoogle();
+      navigation('/');
+    } catch (error) {
+      setErrMsg(getLoginErrorMessage(error));
+    } finally {
+      setAuthAction(null);
     }
   }
 
   return (
-    <div className='signin-container'>
-      <div className='signin-content'>
-        <div className='signin-form'>
-          <svg className='logo'>
+    <div className='flex min-h-screen w-full bg-app-bg text-app-text dark:bg-app-dark-bg dark:text-slate-50'>
+      <div className='flex w-full justify-center px-6 py-12 lg:py-[50px]'>
+        <div className='w-full max-w-[400px]'>
+          <svg className='h-12 w-auto'>
             <use href='/images/Logo.svg#Layer_1'></use>
           </svg>
-          <h1>Welcome back</h1>
-          <p>Welcome back! Please enter your details</p>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor='email'>Email</label>
+          <h1 className='my-2.5 text-3xl font-bold'>Welcome back</h1>
+          <p className='my-2.5 text-sm text-app-subtle dark:text-slate-300'>
+            Welcome back! Please enter your details
+          </p>
+          <form className='mt-10 flex flex-col gap-2.5' onSubmit={handleSubmit}>
+            <label className={labelClassName} htmlFor='email'>
+              Email
+            </label>
             <input
+              className={inputClassName}
               type='email'
               name='email'
               id='email'
@@ -82,8 +111,11 @@ export default function Login() {
               aria-invalid={errMsg.length > 0}
               aria-describedby={errMsg.length > 0 ? loginErrorId : undefined}
             />
-            <label htmlFor='password'>Password</label>
+            <label className={labelClassName} htmlFor='password'>
+              Password
+            </label>
             <input
+              className={inputClassName}
               autoComplete='current-password'
               type='password'
               name='password'
@@ -96,8 +128,9 @@ export default function Login() {
               aria-invalid={errMsg.length > 0}
               aria-describedby={errMsg.length > 0 ? loginErrorId : undefined}
             />
-            <div className='remember-me-container'>
+            <div className='flex items-center gap-2 text-sm font-light'>
               <input
+                className='h-4 w-4 accent-app-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-app-accent'
                 type='checkbox'
                 name='isRemember'
                 id='isRemember'
@@ -108,28 +141,53 @@ export default function Login() {
             </div>
             <AuthFormError id={loginErrorId} message={errMsg} />
             <button
-              className='signin-btn'
+              className={cn(
+                'h-12 rounded-[10px] border-0 bg-app-accent font-semibold text-app-text transition hover:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-app-accent',
+                isSubmitting && 'cursor-not-allowed opacity-70'
+              )}
               disabled={isSubmitting}
               type='submit'
             >
-              {isSubmitting ? 'Signing in...' : 'Sign in'}
+              {isEmailSubmitting ? 'Signing in...' : 'Sign in'}
             </button>
-            <button className='signin-google-btn' type='button'>
+            <button
+              aria-busy={isGoogleSubmitting}
+              aria-label={
+                isGoogleSubmitting
+                  ? 'Signing in with Google'
+                  : 'Sign in with google'
+              }
+              className={cn(
+                secondaryButtonClassName,
+                isSubmitting && 'cursor-not-allowed opacity-70'
+              )}
+              disabled={isSubmitting}
+              onClick={handleGoogleSignIn}
+              type='button'
+            >
               <img
-                className='google-logo'
+                className='h-6 w-6'
                 src='/icons/Google.png'
                 alt=''
               />
-              Sign in with google
+              {isGoogleSubmitting
+                ? 'Signing in with Google...'
+                : 'Sign in with google'}
             </button>
-            <p className='have-account'>
-              Don't have an account? <Link to='/signup'>Sign up for free</Link>
+            <p className='text-center text-sm text-app-subtle dark:text-slate-300'>
+              Don't have an account?{' '}
+              <Link
+                className='font-bold text-app-text no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-app-accent dark:text-slate-50'
+                to='/signup'
+              >
+                Sign up for free
+              </Link>
             </p>
           </form>
         </div>
       </div>
       <img
-        className='hand-image'
+        className='hidden min-h-screen w-[45%] object-cover lg:block'
         src='/images/Image.png'
         alt='hand holding clock'
       />

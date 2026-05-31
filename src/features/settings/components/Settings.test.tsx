@@ -76,9 +76,77 @@ describe('Settings', () => {
     await user.click(screen.getByRole('button', { name: 'Update' }));
 
     expect(screen.getByText('Passwords do not match.')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toHaveAccessibleDescription(
+      'Passwords do not match.'
+    );
+    expect(screen.getByLabelText('Confirm Password')).toHaveAccessibleDescription(
+      'Passwords do not match.'
+    );
+    expect(screen.getByLabelText('Password')).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
+    expect(screen.getByLabelText('Confirm Password')).toHaveAttribute(
+      'aria-invalid',
+      'true'
+    );
     expect(authMocks.updatePassword).not.toHaveBeenCalled();
     expect(authMocks.updateEmail).not.toHaveBeenCalled();
     expect(authMocks.updateUser).not.toHaveBeenCalled();
+  });
+
+  it('keeps labelled form controls disabled until editing starts', async () => {
+    const user = userEvent.setup();
+
+    render(<Settings />);
+
+    const fields = [
+      screen.getByLabelText('Name'),
+      screen.getByLabelText('Email'),
+      screen.getByLabelText('Mobile Number'),
+      screen.getByLabelText('Password'),
+      screen.getByLabelText('Confirm Password'),
+    ];
+
+    fields.forEach((field) => expect(field).toBeDisabled());
+    expect(screen.getByRole('button', { name: 'Update' })).toBeDisabled();
+
+    await user.click(screen.getByRole('button', { name: /edit/i }));
+
+    fields.forEach((field) => expect(field).toBeEnabled());
+    expect(screen.getByRole('button', { name: 'Update' })).toBeEnabled();
+  });
+
+  it('exposes the update loading state while saving changes', async () => {
+    const user = userEvent.setup();
+    let resolveUpdate: () => void = () => {};
+    authMocks.updateUser.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        resolveUpdate = resolve;
+      })
+    );
+
+    render(<Settings />);
+
+    await user.click(screen.getByRole('button', { name: /edit/i }));
+    await user.clear(screen.getByLabelText('Name'));
+    await user.type(screen.getByLabelText('Name'), 'Maki Desu');
+    await user.click(screen.getByRole('button', { name: 'Update' }));
+
+    const updateButton = screen.getByRole('button', {
+      name: 'Updating settings',
+    });
+
+    expect(updateButton).toBeDisabled();
+    expect(updateButton).toHaveAttribute('aria-busy', 'true');
+
+    resolveUpdate();
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: 'Update' })
+      ).not.toHaveAttribute('aria-busy');
+    });
   });
 
   it('opens the reauthentication modal when Firebase requires a recent login', async () => {

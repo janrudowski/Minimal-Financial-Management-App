@@ -1,9 +1,11 @@
 import {
   EmailAuthProvider,
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   reauthenticateWithCredential,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
   updateEmail,
   updatePassword,
@@ -26,6 +28,7 @@ type AuthContextValue = {
   currentUser: User | null;
   signup: (email: string, password: string) => Promise<UserCredential>;
   login: (email: string, password: string) => Promise<UserCredential>;
+  signInWithGoogle: () => Promise<UserCredential>;
   logout: () => Promise<void>;
   updateUser: (
     user: User,
@@ -38,6 +41,11 @@ type AuthContextValue = {
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+const googleProvider = new GoogleAuthProvider();
+
+googleProvider.setCustomParameters({
+  prompt: 'select_account',
+});
 
 type AuthContextProviderProps = {
   children: ReactNode;
@@ -63,6 +71,10 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   function login(email: string, password: string) {
     return signInWithEmailAndPassword(auth, email, password);
+  }
+
+  function signInWithGoogle() {
+    return signInWithPopup(auth, googleProvider);
   }
 
   function updateUser(
@@ -103,6 +115,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         currentUser,
         signup,
         login,
+        signInWithGoogle,
         logout,
         updateUser,
         updatePassword,

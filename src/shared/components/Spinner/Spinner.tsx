@@ -1,4 +1,3 @@
-import './spinner.css';
 import type { CSSProperties } from 'react';
 
 type SpinnerProps = {
@@ -9,7 +8,7 @@ type SpinnerProps = {
 };
 
 export default function Spinner({
-  fill = 'var(--text-two)',
+  fill = 'currentColor',
   height = '3rem',
   width = '3rem',
   marginTop = 0,
@@ -22,8 +21,13 @@ export default function Spinner({
   };
 
   return (
-    <div className='spinner-container'>
-      <svg className='spinner' style={style}>
+    <div className='flex items-center justify-center justify-self-center self-center'>
+      <svg
+        aria-hidden='true'
+        className='relative z-[8] animate-spin'
+        focusable='false'
+        style={style}
+      >
         <use href='/icons/spinner-icon.svg#Layer_1'></use>
       </svg>
     </div>

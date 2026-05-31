@@ -99,9 +99,34 @@ describe('expense model', () => {
     const coffee = expense({ id: 'coffee', name: 'Coffee beans' });
     const rent = expense({ id: 'rent', name: 'Apartment rent' });
 
+    expect(getFilteredExpenses([coffee, rent], { search: 'coffee' })).toEqual([
+      coffee,
+    ]);
+  });
+
+  it('filters recurring expenses and combines that with search', () => {
+    const recurringCoffee = expense({
+      id: 'recurring-coffee',
+      name: 'Coffee subscription',
+      recurring: true,
+    });
+    const oneTimeCoffee = expense({
+      id: 'one-time-coffee',
+      name: 'Coffee gift card',
+      recurring: false,
+    });
+    const recurringCloud = expense({
+      id: 'recurring-cloud',
+      name: 'Cloud hosting',
+      recurring: true,
+    });
+
     expect(
-      getFilteredExpenses([coffee, rent], { type: 'search', value: 'coffee' })
-    ).toEqual([coffee]);
+      getFilteredExpenses(
+        [recurringCoffee, oneTimeCoffee, recurringCloud],
+        { recurringOnly: true, search: 'coffee' }
+      )
+    ).toEqual([recurringCoffee]);
   });
 
   it('returns current page expenses', () => {
@@ -153,7 +178,7 @@ describe('expense reducer', () => {
 
     const filteredState = expenseReducer(stateWithData, {
       type: expenseActions.FILTER,
-      payload: { filter: { type: 'search', value: 'coffee' } },
+      payload: { filter: { search: 'coffee' } },
     });
 
     expect(filteredState.currentPage).toBe(1);

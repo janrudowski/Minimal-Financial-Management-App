@@ -7,6 +7,10 @@ vi.mock('../../features/auth/context/AuthContext', () => ({
   useAuth: () => ({ currentUser: null }),
 }));
 
+vi.mock('../providers/DarkModeProvider', () => ({
+  useDarkMode: () => ({ darkMode: false, setDarkMode: vi.fn() }),
+}));
+
 vi.mock('../../shared/components/Navbar/Navbar', () => ({
   default: () => <nav aria-label="Main navigation">Navigation</nav>,
 }));

@@ -10,7 +10,7 @@ export default function AuthFormError({ id, message }: AuthFormErrorProps) {
 
   return (
     <p
-      className='invalid'
+      className='text-sm font-medium text-app-danger'
       id={id}
       role='alert'
     >

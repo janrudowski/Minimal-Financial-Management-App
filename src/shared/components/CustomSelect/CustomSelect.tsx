@@ -4,7 +4,7 @@ import {
   type ChangeEvent,
   type CSSProperties,
 } from 'react';
-import './customselect.css';
+import { cn } from '../../utils/cn';
 
 type CustomSelectStyles = {
   color?: CSSProperties['color'];
@@ -28,6 +28,10 @@ type CustomSelectProps<T extends string> = {
   setSelected: (item: T) => void;
   disabled?: boolean;
   className?: string;
+  labelClassName?: string;
+  controlClassName?: string;
+  selectClassName?: string;
+  chevronClassName?: string;
 };
 
 export function getInitialCustomSelectValue<T extends string>(
@@ -58,6 +62,10 @@ export default function CustomSelect<T extends string>({
   setSelected,
   disabled = false,
   className = '',
+  labelClassName,
+  controlClassName,
+  selectClassName,
+  chevronClassName,
 }: CustomSelectProps<T>) {
   const generatedId = useId();
   const selectId = id ?? generatedId;
@@ -70,35 +78,44 @@ export default function CustomSelect<T extends string>({
   }
 
   const customSelectStyle: CSSProperties = {
-    color: styles?.color || 'black',
-    minWidth: styles?.minWidth || '200px',
-    textAlign: styles?.align || 'left',
-    fontFamily: styles?.font || 'sans-serif',
-    margin: styles?.margin || 0,
-    fontSize: styles?.fontSize || '1em',
+    color: styles?.color,
+    minWidth: styles?.minWidth,
+    textAlign: styles?.align,
+    fontFamily: styles?.font,
+    margin: styles?.margin,
+    fontSize: styles?.fontSize,
   };
 
   const selectStyle: CSSProperties = {
-    backgroundColor: styles?.background || 'transparent',
-    border: styles?.border || '1px solid #dcdfe4',
-    borderRadius: styles?.borderRadius || '10px',
-    color: styles?.color || 'black',
-    fontFamily: styles?.font || 'sans-serif',
-    fontSize: styles?.fontSize || '1em',
+    backgroundColor: styles?.background,
+    border: styles?.border,
+    borderRadius: styles?.borderRadius,
+    color: styles?.color,
+    fontFamily: styles?.font,
+    fontSize: styles?.fontSize,
   };
 
   return (
     <div
-      className={`custom-select ${className}`.trim()}
+      className={cn('w-full max-w-full', className)}
       style={customSelectStyle}
     >
-      <label className='custom-select-label' htmlFor={selectId}>
+      <label
+        className={cn(
+          'mb-1.5 block text-sm font-semibold leading-tight text-inherit',
+          labelClassName
+        )}
+        htmlFor={selectId}
+      >
         {label}
       </label>
-      <div className='custom-select-control'>
+      <div className={cn('relative w-full', controlClassName)}>
         <select
           id={selectId}
-          className='custom-select-input'
+          className={cn(
+            'min-h-11 w-full cursor-pointer appearance-none rounded-[10px] border border-app-border bg-transparent px-4 py-3 pr-11 text-base leading-tight text-app-text outline-none transition focus-visible:border-app-text focus-visible:ring-4 focus-visible:ring-app-accent/30 disabled:cursor-not-allowed disabled:opacity-60 dark:border-app-dark-border dark:text-slate-50 sm:text-sm',
+            selectClassName
+          )}
           disabled={isDisabled}
           onChange={handleChange}
           style={selectStyle}
@@ -113,7 +130,10 @@ export default function CustomSelect<T extends string>({
         </select>
         <span
           aria-hidden='true'
-          className='custom-select-chevron'
+          className={cn(
+            'pointer-events-none absolute right-4 top-1/2 h-0 w-0 -translate-y-1/3 border-x-[0.32rem] border-t-[0.38rem] border-x-transparent border-t-current text-app-text dark:text-slate-50',
+            chevronClassName
+          )}
           style={{ borderTopColor: styles?.chevronFill || 'currentColor' }}
         />
       </div>
