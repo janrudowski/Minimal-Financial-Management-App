@@ -1,0 +1,271 @@
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import Login from './Login';
+import Signup from './Signup';
+
+const {
+  loginMock,
+  navigateMock,
+  signInWithGoogleMock,
+  signupMock,
+  updateUserMock,
+} = vi.hoisted(
+  () => ({
+    loginMock: vi.fn(),
+    navigateMock: vi.fn(),
+    signInWithGoogleMock: vi.fn(),
+    signupMock: vi.fn(),
+    updateUserMock: vi.fn(),
+  })
+);
+
+vi.mock('../context/AuthContext', () => ({
+  useAuth: () => ({
+    login: loginMock,
+    signInWithGoogle: signInWithGoogleMock,
+    signup: signupMock,
+    updateUser: updateUserMock,
+  }),
+}));
+
+vi.mock('react-router-dom', async () => {
+  const actual =
+    await vi.importActual<typeof import('react-router-dom')>(
+      'react-router-dom'
+    );
+
+  return {
+    ...actual,
+    useNavigate: () => navigateMock,
+  };
+});
+
+describe('auth forms', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    loginMock.mockResolvedValue({ user: { uid: 'user-1' } });
+    signInWithGoogleMock.mockResolvedValue({ user: { uid: 'google-user' } });
+    signupMock.mockResolvedValue({ user: { uid: 'user-1' } });
+    updateUserMock.mockResolvedValue(undefined);
+  });
+
+  it('signs in with the entered credentials', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    await user.type(screen.getByLabelText('Email'), 'irumi@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
+    await user.click(screen.getByRole('button', { name: /^sign in$/i }));
+
+    await waitFor(() => {
+      expect(loginMock).toHaveBeenCalledWith(
+        'irumi@example.com',
+        'password123'
+      );
+    });
+    expect(navigateMock).toHaveBeenCalledWith('/');
+  });
+
+  it('signs in with Google from the login form', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    await user.click(
+      screen.getByRole('button', { name: /^sign in with google$/i })
+    );
+
+    await waitFor(() => {
+      expect(signInWithGoogleMock).toHaveBeenCalledTimes(1);
+    });
+    expect(loginMock).not.toHaveBeenCalled();
+    expect(navigateMock).toHaveBeenCalledWith('/');
+  });
+
+  it('shows a login error when Google sign in fails', async () => {
+    const user = userEvent.setup();
+    signInWithGoogleMock.mockRejectedValueOnce({
+      code: 'auth/popup-closed-by-user',
+    });
+
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    await user.click(
+      screen.getByRole('button', { name: /^sign in with google$/i })
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Could not sign in. Please try again.'
+    );
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
+
+  it('shows a friendly login error without clearing the email', async () => {
+    const user = userEvent.setup();
+    loginMock.mockRejectedValueOnce({ code: 'auth/invalid-credential' });
+
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    await user.type(screen.getByLabelText('Email'), 'irumi@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
+    await user.click(screen.getByRole('button', { name: /^sign in$/i }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Invalid email or password.'
+    );
+    expect(screen.getByLabelText('Email')).toHaveValue('irumi@example.com');
+    expect(screen.getByLabelText('Password')).toHaveValue('');
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
+
+  it('disables the login submit button while sign in is pending', async () => {
+    const user = userEvent.setup();
+    let resolveLogin: (value: unknown) => void = () => {};
+    loginMock.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveLogin = resolve;
+      })
+    );
+
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    await user.type(screen.getByLabelText('Email'), 'irumi@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
+    await user.click(screen.getByRole('button', { name: /^sign in$/i }));
+
+    expect(
+      screen.getByRole('button', { name: 'Signing in...' })
+    ).toBeDisabled();
+
+    resolveLogin({ user: { uid: 'user-1' } });
+
+    await waitFor(() => {
+      expect(navigateMock).toHaveBeenCalledWith('/');
+    });
+  });
+
+  it('creates the user profile with the submitted full name', async () => {
+    const user = userEvent.setup();
+    const firebaseUser = { uid: 'user-1' };
+    signupMock.mockResolvedValue({ user: firebaseUser });
+
+    render(
+      <MemoryRouter>
+        <Signup />
+      </MemoryRouter>
+    );
+
+    await user.type(screen.getByLabelText('Full Name'), 'Irumi Desu');
+    await user.type(screen.getByLabelText('Email'), 'irumi@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
+    await user.click(
+      screen.getByRole('button', { name: /^create account$/i })
+    );
+
+    await waitFor(() => {
+      expect(signupMock).toHaveBeenCalledWith(
+        'irumi@example.com',
+        'password123'
+      );
+    });
+    expect(updateUserMock).toHaveBeenCalledWith(firebaseUser, {
+      displayName: 'Irumi Desu',
+    });
+    expect(navigateMock).toHaveBeenCalledWith('/');
+  });
+
+  it('signs up with Google from the signup form', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter>
+        <Signup />
+      </MemoryRouter>
+    );
+
+    await user.click(
+      screen.getByRole('button', { name: /^sign up with google$/i })
+    );
+
+    await waitFor(() => {
+      expect(signInWithGoogleMock).toHaveBeenCalledTimes(1);
+    });
+    expect(signupMock).not.toHaveBeenCalled();
+    expect(updateUserMock).not.toHaveBeenCalled();
+    expect(navigateMock).toHaveBeenCalledWith('/');
+  });
+
+  it('shows a duplicate email error without clearing profile details', async () => {
+    const user = userEvent.setup();
+    signupMock.mockRejectedValueOnce({ code: 'auth/email-already-in-use' });
+
+    render(
+      <MemoryRouter>
+        <Signup />
+      </MemoryRouter>
+    );
+
+    await user.type(screen.getByLabelText('Full Name'), 'Irumi Desu');
+    await user.type(screen.getByLabelText('Email'), 'irumi@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
+    await user.click(
+      screen.getByRole('button', { name: /^create account$/i })
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Email is already in use.'
+    );
+    expect(screen.getByLabelText('Full Name')).toHaveValue('Irumi Desu');
+    expect(screen.getByLabelText('Email')).toHaveValue('irumi@example.com');
+    expect(screen.getByLabelText('Password')).toHaveValue('');
+    expect(updateUserMock).not.toHaveBeenCalled();
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
+
+  it('shows a weak password error returned from Firebase', async () => {
+    const user = userEvent.setup();
+    signupMock.mockRejectedValueOnce({ code: 'auth/weak-password' });
+
+    render(
+      <MemoryRouter>
+        <Signup />
+      </MemoryRouter>
+    );
+
+    await user.type(screen.getByLabelText('Full Name'), 'Irumi Desu');
+    await user.type(screen.getByLabelText('Email'), 'irumi@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password12');
+    await user.click(
+      screen.getByRole('button', { name: /^create account$/i })
+    );
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Password must be at least 8 characters.'
+    );
+    expect(updateUserMock).not.toHaveBeenCalled();
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
+});
